@@ -3,9 +3,8 @@ server:
   log_level: "debug"
 
 database:
-  driver: "postgres"
   username: "postgres"
-  password: "qwerty"
   dbname: "postgres"
+  host: "localhost"
   port: 5437
   sslmode: "disable"
