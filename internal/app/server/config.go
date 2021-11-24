@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	Port string
+	Port     string
+	LogLevel string
 }
 
 func NewConfig(configPath string) *Config {
@@ -23,6 +24,14 @@ func NewConfig(configPath string) *Config {
 	}
 
 	return &Config{
-		Port: viper.GetString("server.port"),
+		Port:     viper.GetString("server.port"),
+		LogLevel: viper.GetString("server.log_level"),
+	}
+}
+
+func NewDefaultConfig() *Config {
+	return &Config{
+		Port:     "3000",
+		LogLevel: "debug",
 	}
 }
