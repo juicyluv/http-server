@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/ellywynn/http-server/internal/app/store"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -14,28 +15,30 @@ type Server struct {
 	logger     *logrus.Logger
 	router     *mux.Router
 	httpServer *http.Server
+	store      *store.Store
 }
 
+// Create server instance with appropriate config
 func NewServer(config *Config) *Server {
 	return &Server{
-		config: config,
-		logger: logrus.New(),
-		router: mux.NewRouter(),
-		httpServer: &http.Server{
-			Addr:           ":" + config.Port,
-			ReadTimeout:    10 * time.Second,
-			WriteTimeout:   10 * time.Second,
-			MaxHeaderBytes: 1 << 20, // 1MB
-		},
+		config:     config,
+		logger:     logrus.New(),
+		router:     mux.NewRouter(),
+		httpServer: configureHttpServer(config),
 	}
 }
 
+// Run the server
 func (s *Server) Run() error {
 	if err := s.configureLogger(); err != nil {
 		return err
 	}
 
 	s.configureRouter()
+
+	if err := s.configureStore(); err != nil {
+		return err
+	}
 
 	s.logger.Info("Starting api server")
 
@@ -57,8 +60,27 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/hello", s.handleHello())
 }
 
+func (s *Server) configureStore() error {
+	st := store.NewStore(s.config.Store)
+	if err := st.Open(); err != nil {
+		return err
+	}
+
+	s.store = st
+	return nil
+}
+
 func (s *Server) handleHello() http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		io.WriteString(rw, "hello")
+	}
+}
+
+func configureHttpServer(config *Config) *http.Server {
+	return &http.Server{
+		Addr:           ":" + config.Port,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20, // 1MB
 	}
 }
