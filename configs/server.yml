@@ -4,7 +4,7 @@ server:
 
 database:
   username: "postgres"
-  dbname: "postgres"
+  dbname: "travels"
   host: "localhost"
   port: 5437
   sslmode: "disable"
