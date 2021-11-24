@@ -3,15 +3,17 @@ package server
 import (
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
 type Server struct {
-	config *Config
-	logger *logrus.Logger
-	router *mux.Router
+	config     *Config
+	logger     *logrus.Logger
+	router     *mux.Router
+	httpServer *http.Server
 }
 
 func NewServer(config *Config) *Server {
@@ -19,6 +21,12 @@ func NewServer(config *Config) *Server {
 		config: config,
 		logger: logrus.New(),
 		router: mux.NewRouter(),
+		httpServer: &http.Server{
+			Addr:           ":" + config.Port,
+			ReadTimeout:    10 * time.Second,
+			WriteTimeout:   10 * time.Second,
+			MaxHeaderBytes: 1 << 20, // 1MB
+		},
 	}
 }
 
@@ -31,7 +39,7 @@ func (s *Server) Run() error {
 
 	s.logger.Info("Starting api server")
 
-	return http.ListenAndServe(":"+s.config.Port, s.router)
+	return s.httpServer.ListenAndServe()
 }
 
 // Configure logger level
