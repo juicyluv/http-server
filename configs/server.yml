@@ -1,3 +1,11 @@
 server:
   port: 3000
   log_level: "debug"
+
+database:
+  driver: "postgres"
+  username: "postgres"
+  password: "qwerty"
+  dbname: "postgres"
+  port: 5437
+  sslmode: "disable"
