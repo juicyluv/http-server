@@ -9,6 +9,7 @@ import (
 
 type Repository struct {
 	User
+	Auth
 	config *Config
 	db     *sqlx.DB
 }
@@ -45,4 +46,5 @@ func (r *Repository) Close() {
 
 func (r *Repository) initRepositories() {
 	r.User = NewUserRepository(r.db)
+	r.Auth = NewAuthRepository(r.db, &r.User)
 }

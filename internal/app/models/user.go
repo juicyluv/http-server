@@ -34,6 +34,11 @@ func (u *User) HashPassword() error {
 	return nil
 }
 
+// Compare hashed user password with appropriate password
+func (u *User) ComparePassword(password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(u.EncryptedPassword), []byte(password)) == nil
+}
+
 // Returns encrypted password as string
 func encryptString(password string) (string, error) {
 	b, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
