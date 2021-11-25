@@ -1,7 +1,6 @@
 package server
 
 import (
-	"io"
 	"net/http"
 	"time"
 
@@ -19,7 +18,6 @@ type Server struct {
 	httpServer *http.Server
 	repo       *repository.Repository
 	service    *service.Service
-	handler    *v1.Handler
 }
 
 // Create server instance with appropriate config
@@ -85,12 +83,6 @@ func (s *Server) configureRepository() error {
 
 	s.repo = repo
 	return nil
-}
-
-func (s *Server) handleHello() http.HandlerFunc {
-	return func(rw http.ResponseWriter, r *http.Request) {
-		io.WriteString(rw, "hello")
-	}
 }
 
 func configureHttpServer(config *Config) *http.Server {
