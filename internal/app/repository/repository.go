@@ -29,11 +29,10 @@ func (r *Repository) Open() error {
 		return err
 	}
 
-	r.initRepositories()
-
 	logrus.Info("Connected to the database")
 
 	r.db = db
+	r.initRepositories()
 	return nil
 }
 

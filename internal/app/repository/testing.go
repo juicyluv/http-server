@@ -14,7 +14,7 @@ func TestRepository(t *testing.T, dbURL string) (*Repository, func(...string)) {
 
 	r := NewRepository(config)
 	if err := r.Open(); err != nil {
-		t.Fatalf("Error while opening db: %s", err.Error())
+		t.Fatalf("Error while opening database: %s", err.Error())
 	}
 
 	return r, func(tables ...string) {

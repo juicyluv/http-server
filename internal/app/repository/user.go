@@ -32,7 +32,7 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	u := &models.User{}
-	query := "SELECT id, email, username FROM users WHERE email = $1"
+	query := "SELECT id, email, username FROM users WHERE email=$1"
 	err := r.db.QueryRow(query, email).Scan(&u.Id, &u.Username, &u.Email)
 	if err != nil {
 		return nil, err
