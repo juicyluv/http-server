@@ -38,7 +38,7 @@ func (s *Server) Run() error {
 
 	s.logger.Info("Starting api server")
 
-	if err := s.configureStore(); err != nil {
+	if err := s.configureRepository(); err != nil {
 		return err
 	}
 
@@ -60,7 +60,7 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/hello", s.handleHello())
 }
 
-func (s *Server) configureStore() error {
+func (s *Server) configureRepository() error {
 	repo := repository.NewRepository(s.config.Repository)
 	if err := repo.Open(); err != nil {
 		return err
