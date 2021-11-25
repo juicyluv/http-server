@@ -14,11 +14,27 @@ func (h *Handler) createUser(c *gin.Context) {
 		return
 	}
 
-	userId, err := h.service.UserService.Create(&input)
+	if err := input.Validate(); err != nil {
+		errorResponse(c, http.StatusUnprocessableEntity, err.Error())
+		return
+	}
+
+	userId, err := h.service.Create(&input)
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
 	c.JSON(http.StatusCreated, map[string]int{"id": userId})
+}
+
+func (h *Handler) getAllUsers(c *gin.Context) {
+	var users *[]models.User
+	users, err := h.service.User.GetAllUsers()
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{"users": &users})
 }

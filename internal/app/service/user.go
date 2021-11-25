@@ -6,25 +6,29 @@ import (
 )
 
 type UserService struct {
-	repository *repository.Repository
+	repository repository.User
 }
 
-type UserServiceInterface interface {
+type User interface {
 	Create(user *models.User) (int, error)
 	FindByEmail(email string) (*models.User, error)
+	GetAllUsers() (*[]models.User, error)
 }
 
-func NewUserService(repo *repository.Repository) *UserService {
+func NewUserService(repo repository.User) *UserService {
 	return &UserService{
 		repository: repo,
 	}
 }
 
 func (us *UserService) Create(user *models.User) (int, error) {
-	userId, err := us.repository.UserRepository.Create(user)
-	if err != nil {
-		return 0, err
-	}
+	return us.repository.Create(user)
+}
 
-	return userId, nil
+func (us *UserService) FindByEmail(email string) (*models.User, error) {
+	return us.repository.FindByEmail(email)
+}
+
+func (us *UserService) GetAllUsers() (*[]models.User, error) {
+	return us.repository.GetAllUsers()
 }

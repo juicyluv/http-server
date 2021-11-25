@@ -9,6 +9,12 @@ type UserRepository struct {
 	db *sqlx.DB
 }
 
+type User interface {
+	Create(user *models.User) (int, error)
+	FindByEmail(email string) (*models.User, error)
+	GetAllUsers() (*[]models.User, error)
+}
+
 // Creates new User Repository instance
 func NewUserRepository(db *sqlx.DB) *UserRepository {
 	return &UserRepository{
@@ -37,6 +43,29 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	u := &models.User{}
 	query := "SELECT id, email, username FROM users WHERE email=$1"
 	err := r.db.QueryRow(query, email).Scan(&u.Id, &u.Username, &u.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
+
+func (r *UserRepository) GetAllUsers() (*[]models.User, error) {
+	u := &[]models.User{}
+	query := "SELECT id, email, username FROM users"
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var user models.User
+	for rows.Next() {
+		rows.Scan(&user.Id, &user.Email, &user.Username)
+		*u = append(*u, user)
+	}
+
+	err = rows.Err()
 	if err != nil {
 		return nil, err
 	}

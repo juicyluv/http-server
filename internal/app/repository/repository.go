@@ -8,9 +8,9 @@ import (
 )
 
 type Repository struct {
-	UserRepository *UserRepository
-	config         *Config
-	db             *sqlx.DB
+	User
+	config *Config
+	db     *sqlx.DB
 }
 
 // Creates new repository instance with appropriate config
@@ -43,7 +43,6 @@ func (r *Repository) Close() {
 	r.db.Close()
 }
 
-// Initialize repositories
 func (r *Repository) initRepositories() {
-	r.UserRepository = NewUserRepository(r.db)
+	r.User = NewUserRepository(r.db)
 }

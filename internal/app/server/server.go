@@ -40,7 +40,7 @@ func (s *Server) Run() error {
 		return err
 	}
 
-	s.logger.Info("Starting api server")
+	s.logger.Info("Starting server on port " + s.config.Port)
 
 	return s.httpServer.ListenAndServe()
 }
