@@ -18,7 +18,7 @@ func (u *User) Validate() error {
 		u,
 		validation.Field(&u.Email, validation.Required, is.Email),
 		validation.Field(&u.Username, validation.Required, is.Alphanumeric, validation.Length(3, 20)),
-		validation.Field(&u.EncryptedPassword, validation.Required, validation.Length(6, 20)),
+		validation.Field(&u.EncryptedPassword, validation.Required, is.Alphanumeric, validation.Length(6, 20)),
 	)
 }
 

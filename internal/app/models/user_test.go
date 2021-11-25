@@ -26,6 +26,83 @@ func TestUser_Validate(t *testing.T) {
 			},
 			isValid: true,
 		},
+		{
+			name: "empty email",
+			u: func() *models.User {
+				return &models.User{
+					Email:             "",
+					Username:          "user",
+					EncryptedPassword: "qwerty",
+				}
+			},
+			isValid: false,
+		},
+		{
+			name: "no password",
+			u: func() *models.User {
+				return &models.User{
+					Email:             "user@mail.com",
+					Username:          "user",
+					EncryptedPassword: "",
+				}
+			},
+			isValid: false,
+		},
+		{
+			name: "invalid email",
+			u: func() *models.User {
+				return &models.User{
+					Email:             "user",
+					Username:          "user",
+					EncryptedPassword: "qwerty",
+				}
+			},
+			isValid: false,
+		},
+		{
+			name: "invalid username",
+			u: func() *models.User {
+				return &models.User{
+					Email:             "user@mail.com",
+					Username:          "---/",
+					EncryptedPassword: "qwerty123",
+				}
+			},
+			isValid: false,
+		},
+		{
+			name: "password less than 6",
+			u: func() *models.User {
+				return &models.User{
+					Email:             "user@mail.com",
+					Username:          "---/",
+					EncryptedPassword: "asdf",
+				}
+			},
+			isValid: false,
+		},
+		{
+			name: "password more than 20",
+			u: func() *models.User {
+				return &models.User{
+					Email:             "user@mail.com",
+					Username:          "---/",
+					EncryptedPassword: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasdfweqf",
+				}
+			},
+			isValid: false,
+		},
+		{
+			name: "password is not alphabetic",
+			u: func() *models.User {
+				return &models.User{
+					Email:             "user@mail.com",
+					Username:          "---/",
+					EncryptedPassword: "aaaaaa---//",
+				}
+			},
+			isValid: false,
+		},
 	}
 
 	for _, tc := range testCases {
