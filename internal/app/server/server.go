@@ -5,7 +5,9 @@ import (
 	"net/http"
 	"time"
 
+	v1 "github.com/ellywynn/http-server/internal/app/handler/http/v1"
 	"github.com/ellywynn/http-server/internal/app/repository"
+	"github.com/ellywynn/http-server/internal/app/service"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -16,6 +18,8 @@ type Server struct {
 	router     *mux.Router
 	httpServer *http.Server
 	repo       *repository.Repository
+	service    *service.Service
+	handler    *v1.Handler
 }
 
 // Create server instance with appropriate config
@@ -34,15 +38,24 @@ func (s *Server) Run() error {
 		return err
 	}
 
-	s.configureRouter()
+	if err := s.configure(); err != nil {
+		return err
+	}
 
 	s.logger.Info("Starting api server")
 
+	return s.httpServer.ListenAndServe()
+}
+
+func (s *Server) configure() error {
 	if err := s.configureRepository(); err != nil {
 		return err
 	}
 
-	return s.httpServer.ListenAndServe()
+	s.configureService()
+	s.configureRouter()
+
+	return nil
 }
 
 // Configure logger level
@@ -56,8 +69,12 @@ func (s *Server) configureLogger() error {
 	return nil
 }
 
+func (s *Server) configureService() {
+	s.service = service.NewService(s.repo)
+}
+
 func (s *Server) configureRouter() {
-	s.router.HandleFunc("/hello", s.handleHello())
+	s.httpServer.Handler = v1.NewHandler(s.service).InitRoutes()
 }
 
 func (s *Server) configureRepository() error {

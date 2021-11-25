@@ -3,11 +3,12 @@ package service
 import "github.com/ellywynn/http-server/internal/app/repository"
 
 type Service struct {
-	Repository *repository.Repository
+	UserService *UserService
 }
 
+// Returns new Service instance
 func NewService(repo *repository.Repository) *Service {
 	return &Service{
-		Repository: repo,
+		UserService: NewUserService(repo),
 	}
 }

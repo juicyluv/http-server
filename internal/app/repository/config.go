@@ -19,6 +19,7 @@ type DbConfig struct {
 	sslmode  string
 }
 
+// Returns config instance
 func NewConfig() *Config {
 	dbConfig := configureDbConfig()
 	return &Config{
@@ -26,6 +27,7 @@ func NewConfig() *Config {
 	}
 }
 
+// Returns config with fields from config file
 func configureDbConfig() *DbConfig {
 	return &DbConfig{
 		username: viper.GetString("database.username"),
@@ -37,6 +39,7 @@ func configureDbConfig() *DbConfig {
 	}
 }
 
+// Returns database URL as string with appropriate config fields
 func getDbURL(cfg *DbConfig) string {
 	return "postgres://" + cfg.username + ":" + cfg.password + "@" +
 		cfg.host + ":" + cfg.port + "/" + cfg.dbname + "?sslmode=" + cfg.sslmode

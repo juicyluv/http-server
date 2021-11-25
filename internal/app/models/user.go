@@ -7,12 +7,13 @@ import (
 )
 
 type User struct {
-	Id                int
-	Email             string
-	Username          string
-	EncryptedPassword string
+	Id                int    `json:"id"`
+	Email             string `json:"email"`
+	Username          string `json:"username"`
+	EncryptedPassword string `json:"-"`
 }
 
+// Validates creating user struct
 func (u *User) Validate() error {
 	return validation.ValidateStruct(
 		u,
@@ -22,6 +23,7 @@ func (u *User) Validate() error {
 	)
 }
 
+// Hashes user password
 func (u *User) HashPassword() error {
 	enc, err := encryptString(u.EncryptedPassword)
 	if err != nil {
@@ -32,6 +34,7 @@ func (u *User) HashPassword() error {
 	return nil
 }
 
+// Returns encrypted password as string
 func encryptString(password string) (string, error) {
 	b, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

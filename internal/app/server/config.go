@@ -19,17 +19,21 @@ type Config struct {
 	Repository     *repository.Config
 }
 
+// Returns new server config
 func NewConfig(configPath string) *Config {
+	// Select config path and config filename from path
 	pathParts := strings.Split(configPath, "/")
 	filepath := strings.Join(pathParts[:len(pathParts)-1], "/")
 	filename := pathParts[len(pathParts)-1]
 
+	// Set viper configuration and read config
 	viper.AddConfigPath(filepath)
 	viper.SetConfigName(filename)
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error while reading server config: %s", err.Error())
 	}
 
+	// Load .env file
 	if err := godotenv.Load(); err != nil {
 		logrus.Fatalf("Error while loading .env file: %s", err.Error())
 	}
@@ -44,9 +48,13 @@ func NewConfig(configPath string) *Config {
 	}
 }
 
+// Returns default config parameters
 func NewDefaultConfig() *Config {
 	return &Config{
-		Port:     "3000",
-		LogLevel: "debug",
+		Port:           "3000",
+		LogLevel:       "debug",
+		WriteTimeout:   10,
+		ReadTimeout:    10,
+		MaxHeaderBytes: 1 << 20, // 1 MB
 	}
 }

@@ -9,12 +9,14 @@ type UserRepository struct {
 	db *sqlx.DB
 }
 
+// Creates new User Repository instance
 func NewUserRepository(db *sqlx.DB) *UserRepository {
 	return &UserRepository{
 		db: db,
 	}
 }
 
+// Creates user in database and returns new user ID
 func (r *UserRepository) Create(u *models.User) (int, error) {
 	if err := u.HashPassword(); err != nil {
 		return 0, err
@@ -30,6 +32,7 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 	return userId, nil
 }
 
+// Finds user by email and returns User struct
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	u := &models.User{}
 	query := "SELECT id, email, username FROM users WHERE email=$1"
