@@ -12,7 +12,10 @@ type UserRepository struct {
 type User interface {
 	Create(user *models.User) (int, error)
 	FindByEmail(email string) (*models.User, error)
+	FindById(userId int) (*models.User, error)
 	GetAllUsers() (*[]models.User, error)
+	UpdateUser(userId int) error
+	DeleteUser(userId int) error
 }
 
 // Creates new User Repository instance
@@ -50,6 +53,17 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	return u, nil
 }
 
+func (r *UserRepository) FindById(userId int) (*models.User, error) {
+	u := &models.User{}
+	query := "SELECT id, email, username FROM users WHERE id=$1"
+	err := r.db.QueryRow(query, userId).Scan(&u.Id, &u.Username, &u.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
+
 func (r *UserRepository) GetAllUsers() (*[]models.User, error) {
 	u := &[]models.User{}
 	query := "SELECT id, email, username FROM users"
@@ -71,4 +85,12 @@ func (r *UserRepository) GetAllUsers() (*[]models.User, error) {
 	}
 
 	return u, nil
+}
+
+func (r *UserRepository) UpdateUser(userId int) error {
+	return nil
+}
+
+func (r *UserRepository) DeleteUser(userId int) error {
+	return nil
 }

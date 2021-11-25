@@ -12,7 +12,10 @@ type UserService struct {
 type User interface {
 	Create(user *models.User) (int, error)
 	FindByEmail(email string) (*models.User, error)
+	FindById(userId int) (*models.User, error)
 	GetAllUsers() (*[]models.User, error)
+	UpdateUser(userId int) error
+	DeleteUser(userId int) error
 }
 
 func NewUserService(repo repository.User) *UserService {
@@ -29,6 +32,18 @@ func (us *UserService) FindByEmail(email string) (*models.User, error) {
 	return us.repository.FindByEmail(email)
 }
 
+func (us *UserService) FindById(userId int) (*models.User, error) {
+	return us.repository.FindById(userId)
+}
+
 func (us *UserService) GetAllUsers() (*[]models.User, error) {
 	return us.repository.GetAllUsers()
+}
+
+func (us *UserService) UpdateUser(userId int) error {
+	return us.repository.UpdateUser(userId)
+}
+
+func (us *UserService) DeleteUser(userId int) error {
+	return us.repository.DeleteUser(userId)
 }
