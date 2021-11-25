@@ -4,16 +4,19 @@ import (
 	"log"
 	"strings"
 
-	"github.com/ellywynn/http-server/internal/app/store"
+	"github.com/ellywynn/http-server/internal/app/repository"
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Port     string
-	LogLevel string
-	Store    *store.Config
+	Port           string
+	LogLevel       string
+	WriteTimeout   int
+	ReadTimeout    int
+	MaxHeaderBytes int
+	Repository     *repository.Config
 }
 
 func NewConfig(configPath string) *Config {
@@ -32,9 +35,12 @@ func NewConfig(configPath string) *Config {
 	}
 
 	return &Config{
-		Port:     viper.GetString("server.port"),
-		LogLevel: viper.GetString("server.log_level"),
-		Store:    store.NewConfig(),
+		Port:           viper.GetString("server.port"),
+		LogLevel:       viper.GetString("server.log_level"),
+		WriteTimeout:   viper.GetInt("server.writeTimeout"),
+		ReadTimeout:    viper.GetInt("server.readTimeout"),
+		MaxHeaderBytes: viper.GetInt("server.maxHeaderBytes") << 20, // MB
+		Repository:     repository.NewConfig(),
 	}
 }
 

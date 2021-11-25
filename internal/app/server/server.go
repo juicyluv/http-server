@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ellywynn/http-server/internal/app/store"
+	"github.com/ellywynn/http-server/internal/app/repository"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -15,7 +15,7 @@ type Server struct {
 	logger     *logrus.Logger
 	router     *mux.Router
 	httpServer *http.Server
-	store      *store.Store
+	repo       *repository.Repository
 }
 
 // Create server instance with appropriate config
@@ -36,11 +36,11 @@ func (s *Server) Run() error {
 
 	s.configureRouter()
 
+	s.logger.Info("Starting api server")
+
 	if err := s.configureStore(); err != nil {
 		return err
 	}
-
-	s.logger.Info("Starting api server")
 
 	return s.httpServer.ListenAndServe()
 }
@@ -61,12 +61,12 @@ func (s *Server) configureRouter() {
 }
 
 func (s *Server) configureStore() error {
-	st := store.NewStore(s.config.Store)
-	if err := st.Open(); err != nil {
+	repo := repository.NewRepository(s.config.Repository)
+	if err := repo.Open(); err != nil {
 		return err
 	}
 
-	s.store = st
+	s.repo = repo
 	return nil
 }
 
