@@ -44,8 +44,8 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 // Finds user by email and returns User struct
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	u := &models.User{}
-	query := "SELECT id, email, username FROM users WHERE email=$1"
-	err := r.db.QueryRow(query, email).Scan(&u.Id, &u.Username, &u.Email)
+	query := "SELECT id, email, username, encrypted_password FROM users WHERE email=$1"
+	err := r.db.QueryRow(query, email).Scan(&u.Id, &u.Username, &u.Email, &u.EncryptedPassword)
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +55,8 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	u := &models.User{}
-	query := "SELECT id, email, username FROM users WHERE id=$1"
-	err := r.db.QueryRow(query, userId).Scan(&u.Id, &u.Username, &u.Email)
+	query := "SELECT id, email, username, ecnrypted_password FROM users WHERE id=$1"
+	err := r.db.QueryRow(query, userId).Scan(&u.Id, &u.Username, &u.Email, &u.EncryptedPassword)
 	if err != nil {
 		return nil, err
 	}
