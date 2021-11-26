@@ -11,7 +11,7 @@ type Repository struct {
 	User
 	Auth
 	config *Config
-	db     *sqlx.DB
+	Db     *sqlx.DB
 }
 
 // Creates new repository instance with appropriate config
@@ -34,17 +34,17 @@ func (r *Repository) Open() error {
 
 	logrus.Info("Connected to the database")
 
-	r.db = db
+	r.Db = db
 	r.initRepositories()
 	return nil
 }
 
 // Closes database connection
 func (r *Repository) Close() {
-	r.db.Close()
+	r.Db.Close()
 }
 
 func (r *Repository) initRepositories() {
-	r.User = NewUserRepository(r.db)
-	r.Auth = NewAuthRepository(r.db, &r.User)
+	r.User = NewUserRepository(r.Db)
+	r.Auth = NewAuthRepository(r.Db, &r.User)
 }

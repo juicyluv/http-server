@@ -7,7 +7,7 @@ run:
 
 .PHONY: test
 test:
-	go test -race -timeout 20s ./...
+	go test -v -race -timeout 20s ./...
 
 .SILENT: createdb
 createdb:

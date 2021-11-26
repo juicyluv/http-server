@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestRepository(t *testing.T, dbURL string) (*Repository, func(...string)) {
+func NewTestRepository(t *testing.T, dbURL string) (*Repository, func(...string)) {
 	t.Helper()
 
 	config := NewConfig()
@@ -19,7 +19,7 @@ func TestRepository(t *testing.T, dbURL string) (*Repository, func(...string)) {
 
 	return r, func(tables ...string) {
 		if len(tables) > 0 {
-			if _, err := r.db.Exec(fmt.Sprintf("TRUNCATE %s CASCADE",
+			if _, err := r.Db.Exec(fmt.Sprintf("TRUNCATE %s CASCADE",
 				strings.Join(tables, ", "))); err != nil {
 				t.Fatalf("Error while executing db query: %s", err.Error())
 			}
