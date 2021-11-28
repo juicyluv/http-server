@@ -51,7 +51,7 @@ func (s *Server) configure() error {
 	}
 
 	s.configureService()
-	s.configureRouter()
+	s.configureHandler()
 
 	return nil
 }
@@ -71,7 +71,7 @@ func (s *Server) configureService() {
 	s.service = service.NewService(s.repo)
 }
 
-func (s *Server) configureRouter() {
+func (s *Server) configureHandler() {
 	s.httpServer.Handler = v1.NewHandler(s.service).InitRoutes()
 }
 
