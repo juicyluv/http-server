@@ -3,32 +3,23 @@ package repository
 import (
 	"errors"
 
+	"github.com/ellywynn/http-server/internal/app/models"
 	"github.com/jmoiron/sqlx"
 )
 
 type AuthRepository struct {
 	db             *sqlx.DB
-	userRepository User
+	userRepository models.UserRepository
 }
 
-type Auth interface {
-	Login(input *LoginStruct) error
-	Logout() error
-}
-
-type LoginStruct struct {
-	Email    string
-	Password string
-}
-
-func NewAuthRepository(db *sqlx.DB, userRepo *User) *AuthRepository {
+func NewAuthRepository(db *sqlx.DB, userRepo *models.UserRepository) *AuthRepository {
 	return &AuthRepository{
 		db:             db,
 		userRepository: *userRepo,
 	}
 }
 
-func (ar *AuthRepository) Login(input *LoginStruct) error {
+func (ar *AuthRepository) Login(input *models.AuthLoginStruct) error {
 	u, err := ar.userRepository.FindByEmail(input.Email)
 	if err != nil || !u.ComparePassword(input.Password) {
 		return errors.New("incorrect email or password")

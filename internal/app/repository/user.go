@@ -9,15 +9,6 @@ type UserRepository struct {
 	db *sqlx.DB
 }
 
-type User interface {
-	Create(user *models.User) (int, error)
-	FindByEmail(email string) (*models.User, error)
-	FindById(userId int) (*models.User, error)
-	GetAllUsers() (*[]models.User, error)
-	UpdateUser(userId int) error
-	DeleteUser(userId int) error
-}
-
 // Creates new User Repository instance
 func NewUserRepository(db *sqlx.DB) *UserRepository {
 	return &UserRepository{
@@ -53,6 +44,17 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	return u, nil
 }
 
+func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
+	u := &models.User{}
+	query := "SELECT id, email, username, encrypted_password FROM users WHERE username=$1"
+	err := r.db.QueryRow(query, username).Scan(&u.Id, &u.Username, &u.Email, &u.EncryptedPassword)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
+
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	u := &models.User{}
 	query := "SELECT id, email, username, ecnrypted_password FROM users WHERE id=$1"
@@ -64,7 +66,7 @@ func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	return u, nil
 }
 
-func (r *UserRepository) GetAllUsers() (*[]models.User, error) {
+func (r *UserRepository) GetAll() (*[]models.User, error) {
 	u := &[]models.User{}
 	query := "SELECT id, email, username FROM users"
 	rows, err := r.db.Query(query)
@@ -87,10 +89,10 @@ func (r *UserRepository) GetAllUsers() (*[]models.User, error) {
 	return u, nil
 }
 
-func (r *UserRepository) UpdateUser(userId int) error {
+func (r *UserRepository) Update(userId int) error {
 	return nil
 }
 
-func (r *UserRepository) DeleteUser(userId int) error {
+func (r *UserRepository) Delete(userId int) error {
 	return nil
 }
