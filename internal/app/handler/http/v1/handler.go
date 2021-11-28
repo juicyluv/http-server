@@ -15,6 +15,7 @@ func NewHandler(service *service.Service) *Handler {
 	}
 }
 
+// Initializes routes and returns handler
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 

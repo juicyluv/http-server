@@ -21,8 +21,8 @@ type UserRepository interface {
 }
 
 type AuthRepository interface {
-	Login(input *AuthLoginStruct) error
-	Logout() error
+	LogIn(input *AuthLoginStruct) error
+	LogOut() error
 }
 
 type AuthService interface {
