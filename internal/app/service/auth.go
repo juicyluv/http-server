@@ -14,10 +14,10 @@ func NewAuthService(repo *models.AuthRepository) models.AuthService {
 	}
 }
 
-func (as *AuthService) Login(input *models.AuthLoginStruct) error {
-	return as.repository.Login(input)
+func (as *AuthService) LogIn(input *models.AuthLoginStruct) (*models.User, error) {
+	return as.repository.LogIn(input)
 }
 
-func (as *AuthService) Logout() error {
-	return as.repository.Logout()
+func (as *AuthService) LogOut() error {
+	return as.repository.LogOut()
 }

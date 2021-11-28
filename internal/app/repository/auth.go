@@ -19,13 +19,13 @@ func NewAuthRepository(db *sqlx.DB, userRepo *models.UserRepository) *AuthReposi
 	}
 }
 
-func (ar *AuthRepository) LogIn(input *models.AuthLoginStruct) error {
+func (ar *AuthRepository) LogIn(input *models.AuthLoginStruct) (*models.User, error) {
 	u, err := ar.userRepository.FindByEmail(input.Email)
 	if err != nil || !u.ComparePassword(input.Password) {
-		return errors.New("incorrect email or password")
+		return nil, errors.New("incorrect email or password")
 	}
 
-	return nil
+	return u, nil
 }
 
 func (ar *AuthRepository) LogOut() error {

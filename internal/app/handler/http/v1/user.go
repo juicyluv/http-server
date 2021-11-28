@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *Handler) createUser(c *gin.Context) {
+func (h *Handler) signUp(c *gin.Context) {
 	var input models.User
 	if err := c.BindJSON(&input); err != nil {
 		errorResponse(c, http.StatusUnprocessableEntity, err.Error())

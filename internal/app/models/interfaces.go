@@ -21,13 +21,13 @@ type UserRepository interface {
 }
 
 type AuthRepository interface {
-	LogIn(input *AuthLoginStruct) error
+	LogIn(input *AuthLoginStruct) (*User, error)
 	LogOut() error
 }
 
 type AuthService interface {
-	Login(input *AuthLoginStruct) error
-	Logout() error
+	LogIn(input *AuthLoginStruct) (*User, error)
+	LogOut() error
 }
 
 type AuthLoginStruct struct {

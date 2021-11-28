@@ -10,7 +10,7 @@ type User struct {
 	Id                int    `json:"id"`
 	Email             string `json:"email"`
 	Username          string `json:"username"`
-	EncryptedPassword string `json:"password"`
+	EncryptedPassword string `json:"password,omitempty"`
 }
 
 // Validates creating user struct

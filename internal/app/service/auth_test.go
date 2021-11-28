@@ -95,9 +95,13 @@ func TestAuthService_Login(t *testing.T) {
 		if tc.isValid {
 			t.Run(tc.name, func(t *testing.T) {
 				if tc.isValid {
-					assert.NoError(t, s.Auth.Login(tc.login()))
+					u, err := s.Auth.LogIn(tc.login())
+					assert.NoError(t, err)
+					assert.NotNil(t, u)
 				} else {
-					assert.Error(t, s.Auth.Login(tc.login()))
+					u, err := s.Auth.LogIn(tc.login())
+					assert.Error(t, err)
+					assert.Nil(t, u)
 				}
 			})
 		}

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAuth_LogIn(t *testing.T) {
+func TestAuthRepository_LogIn(t *testing.T) {
 	r, teardown := repository.NewTestRepository(t, dbURL)
 	defer teardown("users")
 
@@ -20,10 +20,11 @@ func TestAuth_LogIn(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEqual(t, 0, userId)
 
-	err = r.Auth.LogIn(&models.AuthLoginStruct{
+	u, err := r.Auth.LogIn(&models.AuthLoginStruct{
 		Email:    testUser.Email,
 		Password: password,
 	})
 
 	assert.NoError(t, err)
+	assert.NotNil(t, u)
 }
