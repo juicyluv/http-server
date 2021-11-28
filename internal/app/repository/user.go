@@ -44,6 +44,7 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	return u, nil
 }
 
+// Funds user by username and return user instance
 func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	u := &models.User{}
 	query := "SELECT id, email, username, encrypted_password FROM users WHERE username=$1"
@@ -55,6 +56,7 @@ func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	return u, nil
 }
 
+// Funds user by Id and return user instance
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	u := &models.User{}
 	query := "SELECT id, email, username, ecnrypted_password FROM users WHERE id=$1"
@@ -66,6 +68,7 @@ func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	return u, nil
 }
 
+// Returns all users
 func (r *UserRepository) GetAll() (*[]models.User, error) {
 	u := &[]models.User{}
 	query := "SELECT id, email, username FROM users"
@@ -89,10 +92,12 @@ func (r *UserRepository) GetAll() (*[]models.User, error) {
 	return u, nil
 }
 
+// Updates the user
 func (r *UserRepository) Update(userId int) error {
 	return nil
 }
 
+// Deletes the user
 func (r *UserRepository) Delete(userId int) error {
 	return nil
 }
