@@ -19,7 +19,7 @@ func (h *Handler) createUser(c *gin.Context) {
 		return
 	}
 
-	userId, err := h.service.Create(&input)
+	userId, err := h.service.User.SignUp(&input)
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -30,7 +30,7 @@ func (h *Handler) createUser(c *gin.Context) {
 
 func (h *Handler) getAllUsers(c *gin.Context) {
 	var users *[]models.User
-	users, err := h.service.User.GetAllUsers()
+	users, err := h.service.User.GetAll()
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return
