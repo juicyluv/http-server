@@ -1,23 +1,20 @@
 package service
 
-import "github.com/ellywynn/http-server/internal/app/repository"
+import (
+	"github.com/ellywynn/http-server/internal/app/models"
+)
 
 type AuthService struct {
-	repository repository.Auth
+	repository models.AuthRepository
 }
 
-type Auth interface {
-	Login(input *repository.LoginStruct) error
-	Logout() error
-}
-
-func NewAuthService(repo repository.Auth) *AuthService {
+func NewAuthService(repo *models.AuthRepository) models.AuthService {
 	return &AuthService{
-		repository: repo,
+		repository: *repo,
 	}
 }
 
-func (as *AuthService) Login(input *repository.LoginStruct) error {
+func (as *AuthService) Login(input *models.AuthLoginStruct) error {
 	return as.repository.Login(input)
 }
 

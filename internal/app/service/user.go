@@ -2,48 +2,42 @@ package service
 
 import (
 	"github.com/ellywynn/http-server/internal/app/models"
-	"github.com/ellywynn/http-server/internal/app/repository"
 )
 
 type UserService struct {
-	repository repository.User
+	repository models.UserRepository
 }
 
-type User interface {
-	Create(user *models.User) (int, error)
-	FindByEmail(email string) (*models.User, error)
-	FindById(userId int) (*models.User, error)
-	GetAllUsers() (*[]models.User, error)
-	UpdateUser(userId int) error
-	DeleteUser(userId int) error
-}
-
-func NewUserService(repo repository.User) *UserService {
+func NewUserService(repo *models.UserRepository) models.UserService {
 	return &UserService{
-		repository: repo,
+		repository: *repo,
 	}
 }
 
-func (us *UserService) Create(user *models.User) (int, error) {
+func (us *UserService) SignUp(user *models.User) (int, error) {
 	return us.repository.Create(user)
 }
 
-func (us *UserService) FindByEmail(email string) (*models.User, error) {
+func (us *UserService) GetByEmail(email string) (*models.User, error) {
 	return us.repository.FindByEmail(email)
 }
 
-func (us *UserService) FindById(userId int) (*models.User, error) {
+func (us *UserService) GetByUsername(username string) (*models.User, error) {
+	return us.repository.FindByUsername(username)
+}
+
+func (us *UserService) GetById(userId int) (*models.User, error) {
 	return us.repository.FindById(userId)
 }
 
-func (us *UserService) GetAllUsers() (*[]models.User, error) {
-	return us.repository.GetAllUsers()
+func (us *UserService) GetAll() (*[]models.User, error) {
+	return us.repository.GetAll()
 }
 
-func (us *UserService) UpdateUser(userId int) error {
-	return us.repository.UpdateUser(userId)
+func (us *UserService) Update(userId int) error {
+	return us.repository.Update(userId)
 }
 
-func (us *UserService) DeleteUser(userId int) error {
-	return us.repository.DeleteUser(userId)
+func (us *UserService) Delete(userId int) error {
+	return us.repository.Delete(userId)
 }

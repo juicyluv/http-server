@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/ellywynn/http-server/internal/app/models"
-	"github.com/ellywynn/http-server/internal/app/repository"
 	"github.com/ellywynn/http-server/internal/app/service"
 	"github.com/stretchr/testify/assert"
 )
@@ -18,13 +17,13 @@ func TestAuthService_Login(t *testing.T) {
 
 	testCases := []struct {
 		name    string
-		login   func() *repository.LoginStruct
+		login   func() *models.AuthLoginStruct
 		isValid bool
 	}{
 		{
 			name: "correct login",
-			login: func() *repository.LoginStruct {
-				return &repository.LoginStruct{
+			login: func() *models.AuthLoginStruct {
+				return &models.AuthLoginStruct{
 					Email:    email,
 					Password: password,
 				}
@@ -33,8 +32,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "incorrect email",
-			login: func() *repository.LoginStruct {
-				return &repository.LoginStruct{
+			login: func() *models.AuthLoginStruct {
+				return &models.AuthLoginStruct{
 					Email:    "testemail@",
 					Password: password,
 				}
@@ -43,8 +42,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "incorrect password",
-			login: func() *repository.LoginStruct {
-				return &repository.LoginStruct{
+			login: func() *models.AuthLoginStruct {
+				return &models.AuthLoginStruct{
 					Email:    email,
 					Password: "qwerty12",
 				}
@@ -53,8 +52,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "incorrect email and password",
-			login: func() *repository.LoginStruct {
-				return &repository.LoginStruct{
+			login: func() *models.AuthLoginStruct {
+				return &models.AuthLoginStruct{
 					Email:    "user@eee.com",
 					Password: "qwert222y12",
 				}
@@ -63,8 +62,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "empty email",
-			login: func() *repository.LoginStruct {
-				return &repository.LoginStruct{
+			login: func() *models.AuthLoginStruct {
+				return &models.AuthLoginStruct{
 					Email:    "",
 					Password: password,
 				}
@@ -73,8 +72,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "empty password",
-			login: func() *repository.LoginStruct {
-				return &repository.LoginStruct{
+			login: func() *models.AuthLoginStruct {
+				return &models.AuthLoginStruct{
 					Email:    email,
 					Password: "",
 				}
@@ -83,7 +82,7 @@ func TestAuthService_Login(t *testing.T) {
 		},
 	}
 
-	userId, err := s.User.Create(&models.User{
+	userId, err := s.User.SignUp(&models.User{
 		Email:             email,
 		Username:          "user",
 		EncryptedPassword: password,
@@ -96,9 +95,9 @@ func TestAuthService_Login(t *testing.T) {
 		if tc.isValid {
 			t.Run(tc.name, func(t *testing.T) {
 				if tc.isValid {
-					assert.NoError(t, s.Login(tc.login()))
+					assert.NoError(t, s.Auth.Login(tc.login()))
 				} else {
-					assert.Error(t, s.Login(tc.login()))
+					assert.Error(t, s.Auth.Login(tc.login()))
 				}
 			})
 		}

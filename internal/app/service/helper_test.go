@@ -21,8 +21,8 @@ func NewTestService(t *testing.T, dbURL string) (*Service, func(...string)) {
 
 	s := NewService(r)
 
-	s.User = NewUserService(r)
-	s.Auth = NewAuthService(r)
+	s.User = NewUserService(&r.User)
+	s.Auth = NewAuthService(&r.Auth)
 
 	return s, func(tables ...string) {
 		if len(tables) > 0 {
