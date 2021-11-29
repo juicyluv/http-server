@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+
 	"github.com/ellywynn/http-server/internal/app/models"
 	"github.com/jmoiron/sqlx"
 )
@@ -88,6 +90,9 @@ func (tr *TravelRepository) FindById(travelId int) (*models.Travel, error) {
 	)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 
@@ -99,5 +104,7 @@ func (tr *TravelRepository) Update(travel *models.Travel) error {
 }
 
 func (tr *TravelRepository) Delete(travelId int) error {
-	return nil
+	query := "DELETE FROM travels WHERE id = $1"
+	_, err := tr.db.Exec(query, travelId)
+	return err
 }
