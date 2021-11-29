@@ -2,13 +2,14 @@ package service
 
 import (
 	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 )
 
 type UserService struct {
-	repository models.UserRepository
+	repository interfaces.UserRepository
 }
 
-func NewUserService(repo *models.UserRepository) models.UserService {
+func NewUserService(repo *interfaces.UserRepository) interfaces.UserService {
 	return &UserService{
 		repository: *repo,
 	}

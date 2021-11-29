@@ -3,13 +3,13 @@ package v1
 import (
 	"net/http"
 
-	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) signIn(c *gin.Context) {
-	var input models.AuthLoginStruct
+	var input interfaces.AuthLoginStruct
 	if err := c.BindJSON(&input); err != nil {
 		errorResponse(c, http.StatusUnprocessableEntity, err.Error())
 		return

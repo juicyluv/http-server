@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 
@@ -9,8 +9,8 @@ import (
 )
 
 type Repository struct {
-	User   models.UserRepository
-	Auth   models.AuthRepository
+	User   interfaces.UserRepository
+	Auth   interfaces.AuthRepository
 	config *Config
 	Db     *sqlx.DB
 }

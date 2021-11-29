@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/ellywynn/http-server/internal/app/repository"
 	"github.com/stretchr/testify/assert"
 )
@@ -20,7 +21,7 @@ func TestAuthRepository_LogIn(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEqual(t, 0, userId)
 
-	u, err := r.Auth.LogIn(&models.AuthLoginStruct{
+	u, err := r.Auth.LogIn(&interfaces.AuthLoginStruct{
 		Email:    testUser.Email,
 		Password: password,
 	})

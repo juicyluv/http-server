@@ -4,22 +4,23 @@ import (
 	"errors"
 
 	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/jmoiron/sqlx"
 )
 
 type AuthRepository struct {
 	db             *sqlx.DB
-	userRepository models.UserRepository
+	userRepository interfaces.UserRepository
 }
 
-func NewAuthRepository(db *sqlx.DB, userRepo *models.UserRepository) *AuthRepository {
+func NewAuthRepository(db *sqlx.DB, userRepo *interfaces.UserRepository) *AuthRepository {
 	return &AuthRepository{
 		db:             db,
 		userRepository: *userRepo,
 	}
 }
 
-func (ar *AuthRepository) LogIn(input *models.AuthLoginStruct) (*models.User, error) {
+func (ar *AuthRepository) LogIn(input *interfaces.AuthLoginStruct) (*models.User, error) {
 	u, err := ar.userRepository.FindByEmail(input.Email)
 	if err != nil || !u.ComparePassword(input.Password) {
 		return nil, errors.New("incorrect email or password")

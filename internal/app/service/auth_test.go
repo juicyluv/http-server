@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/ellywynn/http-server/internal/app/service"
 	"github.com/stretchr/testify/assert"
 )
@@ -17,13 +18,13 @@ func TestAuthService_Login(t *testing.T) {
 
 	testCases := []struct {
 		name    string
-		login   func() *models.AuthLoginStruct
+		login   func() *interfaces.AuthLoginStruct
 		isValid bool
 	}{
 		{
 			name: "correct login",
-			login: func() *models.AuthLoginStruct {
-				return &models.AuthLoginStruct{
+			login: func() *interfaces.AuthLoginStruct {
+				return &interfaces.AuthLoginStruct{
 					Email:    email,
 					Password: password,
 				}
@@ -32,8 +33,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "incorrect email",
-			login: func() *models.AuthLoginStruct {
-				return &models.AuthLoginStruct{
+			login: func() *interfaces.AuthLoginStruct {
+				return &interfaces.AuthLoginStruct{
 					Email:    "testemail@",
 					Password: password,
 				}
@@ -42,8 +43,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "incorrect password",
-			login: func() *models.AuthLoginStruct {
-				return &models.AuthLoginStruct{
+			login: func() *interfaces.AuthLoginStruct {
+				return &interfaces.AuthLoginStruct{
 					Email:    email,
 					Password: "qwerty12",
 				}
@@ -52,8 +53,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "incorrect email and password",
-			login: func() *models.AuthLoginStruct {
-				return &models.AuthLoginStruct{
+			login: func() *interfaces.AuthLoginStruct {
+				return &interfaces.AuthLoginStruct{
 					Email:    "user@eee.com",
 					Password: "qwert222y12",
 				}
@@ -62,8 +63,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "empty email",
-			login: func() *models.AuthLoginStruct {
-				return &models.AuthLoginStruct{
+			login: func() *interfaces.AuthLoginStruct {
+				return &interfaces.AuthLoginStruct{
 					Email:    "",
 					Password: password,
 				}
@@ -72,8 +73,8 @@ func TestAuthService_Login(t *testing.T) {
 		},
 		{
 			name: "empty password",
-			login: func() *models.AuthLoginStruct {
-				return &models.AuthLoginStruct{
+			login: func() *interfaces.AuthLoginStruct {
+				return &interfaces.AuthLoginStruct{
 					Email:    email,
 					Password: "",
 				}

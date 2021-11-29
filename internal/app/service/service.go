@@ -1,13 +1,13 @@
 package service
 
 import (
-	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/ellywynn/http-server/internal/app/repository"
 )
 
 type Service struct {
-	User models.UserService
-	Auth models.AuthService
+	User interfaces.UserService
+	Auth interfaces.AuthService
 }
 
 // Returns new Service instance
