@@ -2,6 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
+	"strings"
 
 	"github.com/ellywynn/http-server/internal/app/models"
 	"github.com/jmoiron/sqlx"
@@ -99,8 +101,65 @@ func (tr *TravelRepository) FindById(travelId int) (*models.Travel, error) {
 	return &travel, nil
 }
 
-func (tr *TravelRepository) Update(travel *models.Travel) error {
-	return nil
+func (tr *TravelRepository) Update(travelId int, travel *models.UpdateTravelInput) error {
+	values := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if travel.Title != nil {
+		values = append(values, fmt.Sprintf("title=$%d", argId))
+		args = append(args, *travel.Title)
+		argId++
+	}
+
+	if travel.DurationDays != nil {
+		values = append(values, fmt.Sprintf("duration_days=$%d", argId))
+		args = append(args, *travel.DurationDays)
+		argId++
+	}
+
+	if travel.Price != nil {
+		values = append(values, fmt.Sprintf("price=$%d", argId))
+		args = append(args, *travel.Price)
+		argId++
+	}
+
+	if travel.PartySize != nil {
+		values = append(values, fmt.Sprintf("party_size=$%d", argId))
+		args = append(args, *travel.PartySize)
+		argId++
+	}
+
+	if travel.Complexity != nil {
+		values = append(values, fmt.Sprintf("complexity=$%d", argId))
+		args = append(args, *travel.Complexity)
+		argId++
+	}
+
+	if travel.Description != nil {
+		values = append(values, fmt.Sprintf("description=$%d", argId))
+		args = append(args, *travel.Description)
+		argId++
+	}
+
+	if travel.Date != nil {
+		values = append(values, fmt.Sprintf("date=$%d", argId))
+		args = append(args, travel.Date.String())
+		argId++
+	}
+
+	if travel.Place != nil {
+		values = append(values, fmt.Sprintf("place=$%d", argId))
+		args = append(args, *travel.Place)
+		argId++
+	}
+
+	valuesQuery := strings.Join(values, ", ")
+	query := fmt.Sprintf("UPDATE travels SET %s WHERE id = $%d", valuesQuery, argId)
+	args = append(args, travelId)
+
+	_, err := tr.db.Exec(query, args...)
+	return err
 }
 
 func (tr *TravelRepository) Delete(travelId int) error {

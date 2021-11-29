@@ -95,6 +95,29 @@ func TestTravelRepository_FindById(t *testing.T) {
 	assert.Equal(t, tr.Id, travelId)
 }
 
+func TestTravelRepository_Update(t *testing.T) {
+	r, teardown := repository.NewTestRepository(t, dbURL)
+	defer teardown("travels")
+
+	travel := &models.Travel{
+		Title:        "Title",
+		DurationDays: 10,
+		Price:        200,
+		PartySize:    10,
+		Complexity:   4,
+		Place:        1,
+		Description:  "desc",
+		Date:         tinydate.Now().ToTime(),
+	}
+
+	travelId, err := r.Travel.Create(travel)
+
+	assert.NoError(t, err)
+	assert.NotEqual(t, 0, travelId)
+
+	// TODO: query update repository
+}
+
 func TestTravelRepository_Delete(t *testing.T) {
 	r, teardown := repository.NewTestRepository(t, dbURL)
 	defer teardown("travels")

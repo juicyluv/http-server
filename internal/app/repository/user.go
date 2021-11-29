@@ -113,21 +113,21 @@ func (r *UserRepository) Update(userId int, user *models.UserUpdateInput) error 
 	args := make([]interface{}, 0)
 	argId := 1
 
-	if user.Email != "" {
+	if user.Email != nil {
 		values = append(values, fmt.Sprintf("email=$%d", argId))
-		args = append(args, user.Email)
+		args = append(args, *user.Email)
 		argId++
 	}
 
-	if user.Username != "" {
+	if user.Username != nil {
 		values = append(values, fmt.Sprintf("username=$%d", argId))
-		args = append(args, user.Username)
+		args = append(args, *user.Username)
 		argId++
 	}
 
-	if user.Password != "" {
+	if user.Password != nil {
 		// Hash user password
-		hashedPassword, err := hashPassword(user.Password)
+		hashedPassword, err := hashPassword(*user.Password)
 		if err != nil {
 			return err
 		}

@@ -21,6 +21,6 @@ type TravelRepository interface {
 	Create(travel *models.Travel) (uint, error)
 	FindById(travelId int) (*models.Travel, error)
 	FindAll() (*[]models.Travel, error)
-	Update(travel *models.Travel) error
+	Update(travelId int, travel *models.UpdateTravelInput) error
 	Delete(travelId int) error
 }

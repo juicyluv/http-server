@@ -16,9 +16,9 @@ type User struct {
 }
 
 type UserUpdateInput struct {
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Password string `json:"password,omitempty"`
+	Email    *string `json:"email"`
+	Username *string `json:"username"`
+	Password *string `json:"password,omitempty"`
 }
 
 // Validates creating user struct
@@ -58,7 +58,7 @@ func encryptString(password string) (string, error) {
 }
 
 func (u UserUpdateInput) Validate() error {
-	if u.Username == "" && u.Email == "" && u.Password == "" {
+	if u.Username == nil && u.Email == nil && u.Password == nil {
 		return errors.New("object cannot be empty")
 	}
 
