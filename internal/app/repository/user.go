@@ -1,8 +1,13 @@
 package repository
 
 import (
+	"database/sql"
+	"fmt"
+	"strings"
+
 	"github.com/ellywynn/http-server/internal/app/models"
 	"github.com/jmoiron/sqlx"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository struct {
@@ -35,33 +40,43 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 // Finds user by email and returns User struct
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	u := &models.User{}
-	query := "SELECT id, email, username, encrypted_password FROM users WHERE email=$1"
-	err := r.db.QueryRow(query, email).Scan(&u.Id, &u.Username, &u.Email, &u.EncryptedPassword)
+	query := "SELECT id, email, username FROM users WHERE email=$1"
+	err := r.db.QueryRow(query, email).Scan(&u.Id, &u.Username, &u.Email)
+
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 
 	return u, nil
 }
 
-// Funds user by username and return user instance
+// Finds user by username and returns user instance
 func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	u := &models.User{}
-	query := "SELECT id, email, username, encrypted_password FROM users WHERE username=$1"
-	err := r.db.QueryRow(query, username).Scan(&u.Id, &u.Username, &u.Email, &u.EncryptedPassword)
+	query := "SELECT id, email, username FROM users WHERE username=$1"
+	err := r.db.QueryRow(query, username).Scan(&u.Id, &u.Username, &u.Email)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 
 	return u, nil
 }
 
-// Funds user by Id and return user instance
+// Finds user by Id and returns user instance
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	u := &models.User{}
-	query := "SELECT id, email, username, ecnrypted_password FROM users WHERE id=$1"
-	err := r.db.QueryRow(query, userId).Scan(&u.Id, &u.Username, &u.Email, &u.EncryptedPassword)
+	query := "SELECT id, email, username FROM users WHERE id=$1"
+	err := r.db.QueryRow(query, userId).Scan(&u.Id, &u.Username, &u.Email)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 
@@ -93,11 +108,55 @@ func (r *UserRepository) GetAll() (*[]models.User, error) {
 }
 
 // Updates the user
-func (r *UserRepository) Update(user *models.User) error {
-	return nil
+func (r *UserRepository) Update(userId int, user *models.UserUpdateInput) error {
+	values := make([]string, 0)
+	args := make([]interface{}, 0)
+	argId := 1
+
+	if user.Email != "" {
+		values = append(values, fmt.Sprintf("email=$%d", argId))
+		args = append(args, user.Email)
+		argId++
+	}
+
+	if user.Username != "" {
+		values = append(values, fmt.Sprintf("username=$%d", argId))
+		args = append(args, user.Username)
+		argId++
+	}
+
+	if user.Password != "" {
+		// Hash user password
+		hashedPassword, err := hashPassword(user.Password)
+		if err != nil {
+			return err
+		}
+		values = append(values, fmt.Sprintf("encrypted_password=$%d", argId))
+		args = append(args, hashedPassword)
+		argId++
+	}
+
+	valuesQuery := strings.Join(values, ", ")
+	query := fmt.Sprintf("UPDATE users SET %s WHERE id = $%d", valuesQuery, argId)
+	args = append(args, userId)
+
+	_, err := r.db.Exec(query, args...)
+	return err
 }
 
 // Deletes the user
 func (r *UserRepository) Delete(userId int) error {
-	return nil
+	query := "DELETE FROM users WHERE id = $1"
+	_, err := r.db.Exec(query, userId)
+	return err
+}
+
+func hashPassword(password string) (string, error) {
+	// Hash password
+	b, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+
+	return string(b), nil
 }

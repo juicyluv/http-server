@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/viper"
@@ -41,6 +42,6 @@ func configureDbConfig() *DbConfig {
 
 // Returns database URL as string with appropriate config fields
 func getDbURL(cfg *DbConfig) string {
-	return "postgres://" + cfg.username + ":" + cfg.password + "@" +
-		cfg.host + ":" + cfg.port + "/" + cfg.dbname + "?sslmode=" + cfg.sslmode
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		cfg.username, cfg.password, cfg.host, cfg.port, cfg.dbname, cfg.sslmode)
 }

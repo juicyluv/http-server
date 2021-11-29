@@ -9,9 +9,11 @@ import (
 )
 
 type Repository struct {
+	// Implemented interfaces
 	User   interfaces.UserRepository
 	Auth   interfaces.AuthRepository
 	Travel interfaces.TravelRepository
+
 	config *Config
 	Db     *sqlx.DB
 }

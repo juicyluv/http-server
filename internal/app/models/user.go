@@ -1,6 +1,8 @@
 package models
 
 import (
+	"errors"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 	"golang.org/x/crypto/bcrypt"
@@ -11,6 +13,12 @@ type User struct {
 	Email             string `json:"email"`
 	Username          string `json:"username"`
 	EncryptedPassword string `json:"password,omitempty"`
+}
+
+type UserUpdateInput struct {
+	Email    string `json:"email"`
+	Username string `json:"username"`
+	Password string `json:"password,omitempty"`
 }
 
 // Validates creating user struct
@@ -47,4 +55,12 @@ func encryptString(password string) (string, error) {
 	}
 
 	return string(b), nil
+}
+
+func (u UserUpdateInput) Validate() error {
+	if u.Username == "" && u.Email == "" && u.Password == "" {
+		return errors.New("object cannot be empty")
+	}
+
+	return nil
 }
