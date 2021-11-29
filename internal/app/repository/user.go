@@ -93,7 +93,7 @@ func (r *UserRepository) GetAll() (*[]models.User, error) {
 }
 
 // Updates the user
-func (r *UserRepository) Update(userId int) error {
+func (r *UserRepository) Update(user *models.User) error {
 	return nil
 }
 

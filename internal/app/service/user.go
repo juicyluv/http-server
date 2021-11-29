@@ -35,8 +35,8 @@ func (us *UserService) GetAll() (*[]models.User, error) {
 	return us.repository.GetAll()
 }
 
-func (us *UserService) Update(userId int) error {
-	return us.repository.Update(userId)
+func (us *UserService) Update(user *models.User) error {
+	return us.repository.Update(user)
 }
 
 func (us *UserService) Delete(userId int) error {

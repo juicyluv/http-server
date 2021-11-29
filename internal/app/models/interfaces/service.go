@@ -8,7 +8,7 @@ type UserService interface {
 	GetById(userId int) (*models.User, error)
 	GetByUsername(username string) (*models.User, error)
 	GetAll() (*[]models.User, error)
-	Update(userId int) error
+	Update(user *models.User) error
 	Delete(userId int) error
 }
 
@@ -20,4 +20,12 @@ type AuthService interface {
 type AuthLoginStruct struct {
 	Email    string
 	Password string
+}
+
+type TravelService interface {
+	Create(travel *models.Travel) (int, error)
+	GetById(travelId int) (*models.Travel, error)
+	GetAll() (*[]models.Travel, error)
+	Update(travel *models.Travel) error
+	Delete(travelId int) error
 }

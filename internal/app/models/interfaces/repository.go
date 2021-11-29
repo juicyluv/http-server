@@ -13,6 +13,14 @@ type UserRepository interface {
 	FindByUsername(username string) (*models.User, error)
 	FindById(userId int) (*models.User, error)
 	GetAll() (*[]models.User, error)
-	Update(userId int) error
+	Update(user *models.User) error
 	Delete(userId int) error
+}
+
+type TravelRepository interface {
+	Create(travel *models.Travel) (int, error)
+	FindById(travelId int) (*models.Travel, error)
+	FindAll() (*[]models.Travel, error)
+	Update(travel *models.Travel) error
+	Delete(travelId int) error
 }

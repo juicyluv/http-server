@@ -11,6 +11,7 @@ import (
 type Repository struct {
 	User   interfaces.UserRepository
 	Auth   interfaces.AuthRepository
+	Travel interfaces.TravelRepository
 	config *Config
 	Db     *sqlx.DB
 }
