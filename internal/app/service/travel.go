@@ -15,7 +15,7 @@ func NewTravelService(repo *interfaces.TravelRepository) interfaces.TravelServic
 	}
 }
 
-func (ts *TravelService) Create(travel *models.Travel) (int, error) {
+func (ts *TravelService) Create(travel *models.Travel) (uint, error) {
 	return ts.repository.Create(travel)
 }
 

@@ -18,7 +18,7 @@ type UserRepository interface {
 }
 
 type TravelRepository interface {
-	Create(travel *models.Travel) (int, error)
+	Create(travel *models.Travel) (uint, error)
 	FindById(travelId int) (*models.Travel, error)
 	FindAll() (*[]models.Travel, error)
 	Update(travel *models.Travel) error

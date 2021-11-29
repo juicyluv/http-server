@@ -23,7 +23,7 @@ type AuthLoginStruct struct {
 }
 
 type TravelService interface {
-	Create(travel *models.Travel) (int, error)
+	Create(travel *models.Travel) (uint, error)
 	GetById(travelId int) (*models.Travel, error)
 	GetAll() (*[]models.Travel, error)
 	Update(travel *models.Travel) error
