@@ -7,14 +7,12 @@ import (
 	v1 "github.com/ellywynn/http-server/internal/app/handler/http/v1"
 	"github.com/ellywynn/http-server/internal/app/repository"
 	"github.com/ellywynn/http-server/internal/app/service"
-	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
 
 type Server struct {
 	config     *Config
 	logger     *logrus.Logger
-	router     *mux.Router
 	httpServer *http.Server
 	repo       *repository.Repository
 	service    *service.Service
@@ -25,7 +23,6 @@ func NewServer(config *Config) *Server {
 	return &Server{
 		config:     config,
 		logger:     logrus.New(),
-		router:     mux.NewRouter(),
 		httpServer: configureHttpServer(config),
 	}
 }
