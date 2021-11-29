@@ -13,7 +13,7 @@ type UserRepository interface {
 	FindByUsername(username string) (*models.User, error)
 	FindById(userId int) (*models.User, error)
 	GetAll() (*[]models.User, error)
-	Update(user *models.User) error
+	Update(userId int, user *models.UserUpdateInput) error
 	Delete(userId int) error
 }
 
