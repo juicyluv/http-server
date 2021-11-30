@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 
@@ -39,72 +38,58 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 
 // Finds user by email and returns User struct
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
-	u := &models.User{}
+	u := models.User{}
 	query := "SELECT id, email, username FROM users WHERE email=$1"
-	err := r.db.QueryRow(query, email).Scan(&u.Id, &u.Username, &u.Email)
-
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
+	if err := r.db.Get(&u, query, email); err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return &u, nil
+}
+
+// Finds user by email and returns User struct with user password
+// Use it carefully
+func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, error) {
+	u := models.User{}
+	query := "SELECT id, email, username, encrypted_password FROM users WHERE email=$1"
+	if err := r.db.Get(&u, query, email); err != nil {
+		return nil, err
+	}
+
+	return &u, nil
 }
 
 // Finds user by username and returns user instance
 func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
-	u := &models.User{}
+	u := models.User{}
 	query := "SELECT id, email, username FROM users WHERE username=$1"
-	err := r.db.QueryRow(query, username).Scan(&u.Id, &u.Username, &u.Email)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
+	if err := r.db.Get(&u, query, username); err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return &u, nil
 }
 
 // Finds user by Id and returns user instance
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
-	u := &models.User{}
+	u := models.User{}
 	query := "SELECT id, email, username FROM users WHERE id=$1"
-	err := r.db.QueryRow(query, userId).Scan(&u.Id, &u.Username, &u.Email)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
+	if err := r.db.Get(&u, query, userId); err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return &u, nil
 }
 
 // Returns all users
 func (r *UserRepository) GetAll() (*[]models.User, error) {
-	u := &[]models.User{}
+	u := []models.User{}
 	query := "SELECT id, email, username FROM users"
-	rows, err := r.db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var user models.User
-	for rows.Next() {
-		rows.Scan(&user.Id, &user.Email, &user.Username)
-		*u = append(*u, user)
-	}
-
-	err = rows.Err()
-	if err != nil {
+	if err := r.db.Select(&u, query); err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return &u, nil
 }
 
 // Updates the user
