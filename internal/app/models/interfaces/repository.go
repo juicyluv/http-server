@@ -10,6 +10,7 @@ type AuthRepository interface {
 type UserRepository interface {
 	Create(user *models.User) (int, error)
 	FindByEmail(email string) (*models.User, error)
+	FindByEmailWithPassword(email string) (*models.User, error)
 	FindByUsername(username string) (*models.User, error)
 	FindById(userId int) (*models.User, error)
 	GetAll() (*[]models.User, error)
