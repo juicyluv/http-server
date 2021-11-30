@@ -30,7 +30,7 @@ func (h *Handler) signUp(c *gin.Context) {
 }
 
 func (h *Handler) signIn(c *gin.Context) {
-	session, err := h.sessionStore.Get(c.Request, "cookie-name")
+	session, err := h.sessionStore.Get(c.Request, coockieName)
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -68,7 +68,7 @@ func (h *Handler) signIn(c *gin.Context) {
 }
 
 func (h *Handler) signOut(c *gin.Context) {
-	session, err := h.sessionStore.Get(c.Request, "cookie-name")
+	session, err := h.sessionStore.Get(c.Request, coockieName)
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return
