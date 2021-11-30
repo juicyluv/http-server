@@ -17,7 +17,7 @@ func (h *Handler) getAllUsers(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{"users": &users})
+	c.JSON(http.StatusOK, &users)
 }
 
 func (h *Handler) getUserById(c *gin.Context) {
@@ -39,7 +39,7 @@ func (h *Handler) getUserById(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{"user": user})
+	c.JSON(http.StatusOK, user)
 }
 
 func (h *Handler) updateUser(c *gin.Context) {
