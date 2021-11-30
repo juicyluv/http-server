@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 
@@ -45,31 +44,9 @@ func (tr *TravelRepository) Create(travel *models.Travel) (uint, error) {
 
 func (tr *TravelRepository) FindAll() (*[]models.Travel, error) {
 	var travels []models.Travel
-	query := "SELECT * FROM travels"
-	rows, err := tr.db.Query(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+	query := "SELECT t.*, p.name as place FROM travels t INNER JOIN places p ON t.place = p.id"
 
-	var travel models.Travel
-	for rows.Next() {
-		rows.Scan(
-			&travel.Id,
-			&travel.Title,
-			&travel.DurationDays,
-			&travel.Price,
-			&travel.PartySize,
-			&travel.Complexity,
-			&travel.Description,
-			&travel.Date,
-			&travel.Place,
-		)
-		travels = append(travels, travel)
-	}
-
-	err = rows.Err()
-	if err != nil {
+	if err := tr.db.Select(&travels, query); err != nil {
 		return nil, err
 	}
 
@@ -78,23 +55,14 @@ func (tr *TravelRepository) FindAll() (*[]models.Travel, error) {
 
 func (tr *TravelRepository) FindById(travelId int) (*models.Travel, error) {
 	var travel models.Travel
-	query := "SELECT * FROM travels WHERE id = $1"
-	err := tr.db.QueryRow(query, travelId).Scan(
-		&travel.Id,
-		&travel.Title,
-		&travel.DurationDays,
-		&travel.Price,
-		&travel.PartySize,
-		&travel.Complexity,
-		&travel.Description,
-		&travel.Date,
-		&travel.Place,
-	)
+	query := `
+		SELECT t.*, p.name as place FROM travels t
+		INNER JOIN places p ON t.place = p.id
+		WHERE t.id = $1
+	`
+	err := tr.db.Get(&travel, query, travelId)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
 		return nil, err
 	}
 
