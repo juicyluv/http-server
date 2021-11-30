@@ -3,10 +3,14 @@ package v1
 import (
 	"os"
 
-	"github.com/ellywynn/http-server/internal/app/handler/http/middleware"
 	"github.com/ellywynn/http-server/internal/app/service"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
+	"github.com/spf13/viper"
+)
+
+const (
+	coockieName = "travels"
 )
 
 type Handler struct {
@@ -15,9 +19,19 @@ type Handler struct {
 }
 
 func NewHandler(service *service.Service) *Handler {
+	coockieOptions := sessions.Options{
+		HttpOnly: viper.GetBool("sessions.httpOnly"),
+		MaxAge:   viper.GetInt("sessions.maxAge") * 60 * 60 * 24, // days
+		Secure:   viper.GetBool("sessions.secure"),
+		Path:     "/",
+	}
+
+	coockieStore := sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
+	coockieStore.Options = &coockieOptions
+
 	return &Handler{
 		service:      service,
-		sessionStore: sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY"))),
+		sessionStore: coockieStore,
 	}
 }
 
@@ -36,11 +50,20 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		users := api.Group("/users")
 		{
-			users.GET("/", middleware.Authenticate(h.sessionStore), h.getAllUsers)
+			users.GET("/", authenticate(h.sessionStore), h.getAllUsers)
 			users.POST("/", h.signUp)
 			users.GET("/:id", h.getUserById)
 			users.PUT("/:id", h.updateUser)
 			users.DELETE("/:id", h.deleteUser)
+		}
+
+		travels := api.Group("/travels")
+		{
+			travels.GET("/", h.getAllTravels)
+			travels.GET("/:id", h.getTravelById)
+			travels.POST("/", h.createTravel)
+			travels.PUT("/:id", h.updateTravel)
+			travels.DELETE("/:id", h.deleteTravel)
 		}
 	}
 
