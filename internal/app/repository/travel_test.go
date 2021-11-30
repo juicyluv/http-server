@@ -115,7 +115,30 @@ func TestTravelRepository_Update(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEqual(t, 0, travelId)
 
-	// TODO: query update repository
+	title := "hello world"
+	days := 5
+	partySize := 5
+	complexity := 3
+	description := "new description"
+
+	travelToUpdate := &models.UpdateTravelInput{
+		Title:        &title,
+		DurationDays: &days,
+		PartySize:    &partySize,
+		Complexity:   &complexity,
+		Description:  &description,
+	}
+
+	err = r.Travel.Update(int(travelId), travelToUpdate)
+	assert.NoError(t, err)
+
+	updatedTravel, _ := r.Travel.FindById(int(travelId))
+
+	assert.Equal(t, updatedTravel.Complexity, complexity)
+	assert.Equal(t, updatedTravel.Title, title)
+	assert.Equal(t, updatedTravel.DurationDays, days)
+	assert.Equal(t, updatedTravel.Description, description)
+	assert.Equal(t, updatedTravel.PartySize, partySize)
 }
 
 func TestTravelRepository_Delete(t *testing.T) {
