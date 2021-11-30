@@ -11,3 +11,8 @@ database:
   host: "localhost"
   port: 5437
   sslmode: "disable"
+
+sessions:
+  httpOnly: true
+  maxAge: 30 # days
+  secure: false
