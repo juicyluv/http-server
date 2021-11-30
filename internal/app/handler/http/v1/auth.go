@@ -5,7 +5,6 @@ import (
 
 	"github.com/ellywynn/http-server/internal/app/models"
 	"github.com/ellywynn/http-server/internal/app/models/interfaces"
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,6 +30,18 @@ func (h *Handler) signUp(c *gin.Context) {
 }
 
 func (h *Handler) signIn(c *gin.Context) {
+	session, err := h.sessionStore.Get(c.Request, "cookie-name")
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	// User already authenticated
+	if _, exist := session.Values["user_id"]; exist {
+		errorResponse(c, http.StatusForbidden, "you are already auhorized")
+		return
+	}
+
 	var input interfaces.AuthLoginStruct
 	if err := c.BindJSON(&input); err != nil {
 		errorResponse(c, http.StatusUnprocessableEntity, err.Error())
@@ -44,17 +55,29 @@ func (h *Handler) signIn(c *gin.Context) {
 	}
 
 	// Set user session
-	session := sessions.Default(c)
+	session.Values["user_id"] = user.Id
+	session.Values["email"] = user.Email
+	session.Values["username"] = user.Username
 
-	session.Set("user_id", user.Id)
-	session.Set("email", user.Email)
-	session.Set("username", user.Username)
-
-	session.Save()
+	if err := session.Save(c.Request, c.Writer); err != nil {
+		errorResponse(c, http.StatusInternalServerError, "unable save user session")
+		return
+	}
 
 	c.JSON(http.StatusOK, nil)
 }
 
 func (h *Handler) signOut(c *gin.Context) {
+	session, err := h.sessionStore.Get(c.Request, "cookie-name")
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	// Clear user session
+	for k := range session.Values {
+		delete(session.Values, k)
+	}
+
+	c.Status(http.StatusOK)
 }
