@@ -9,6 +9,7 @@ type Service struct {
 	User   interfaces.UserService
 	Auth   interfaces.AuthService
 	Travel interfaces.TravelService
+	Place  interfaces.PlaceService
 }
 
 // Returns new Service instance
@@ -17,5 +18,6 @@ func NewService(repo *repository.Repository) *Service {
 		User:   NewUserService(&repo.User),
 		Auth:   NewAuthService(&repo.Auth),
 		Travel: NewTravelService(&repo.Travel),
+		Place:  NewPlaceService(&repo.Place),
 	}
 }

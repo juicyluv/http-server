@@ -13,6 +13,7 @@ type Repository struct {
 	User   interfaces.UserRepository
 	Auth   interfaces.AuthRepository
 	Travel interfaces.TravelRepository
+	Place  interfaces.PlaceRepository
 
 	config *Config
 	Db     *sqlx.DB

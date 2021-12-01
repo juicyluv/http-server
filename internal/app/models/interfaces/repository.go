@@ -25,3 +25,11 @@ type TravelRepository interface {
 	Update(travelId int, travel *models.UpdateTravelInput) error
 	Delete(travelId int) error
 }
+
+type PlaceRepository interface {
+	Create(place *models.Place) (uint, error)
+	FindById(placeId int) (*models.Place, error)
+	FindAll() (*[]models.Place, error)
+	Update(placeId int, place *models.UpdatePlaceInput) error
+	Delete(placeId int) error
+}
