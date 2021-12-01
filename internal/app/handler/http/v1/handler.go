@@ -65,6 +65,15 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			travels.PUT("/:id", h.updateTravel)
 			travels.DELETE("/:id", h.deleteTravel)
 		}
+
+		places := api.Group("/places")
+		{
+			places.GET("/", h.getAllPlaces)
+			places.GET("/:id", h.getPlaceById)
+			places.POST("/", h.createPlace)
+			places.PUT("/:id", h.updatePlace)
+			places.DELETE("/:id", h.deletePlace)
+		}
 	}
 
 	return router
