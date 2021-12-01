@@ -53,4 +53,5 @@ func (r *Repository) initRepositories() {
 	r.User = NewUserRepository(r.Db)
 	r.Auth = NewAuthRepository(r.Db, &r.User)
 	r.Travel = NewTravelRepository(r.Db)
+	r.Place = NewPlaceRepository(r.Db)
 }
