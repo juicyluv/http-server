@@ -42,3 +42,15 @@ func (us *UserService) Update(userId int, user *models.UserUpdateInput) error {
 func (us *UserService) Delete(userId int) error {
 	return us.repository.Delete(userId)
 }
+
+func (us *UserService) AddTravel(userId, travelId int) error {
+	return us.repository.AddTravel(userId, travelId)
+}
+
+func (us *UserService) GetTravels(userId int) (*[]models.Travel, error) {
+	return us.repository.GetTravels(userId)
+}
+
+func (us *UserService) RemoveTravel(userId, travelId int) error {
+	return us.repository.RemoveTravel(userId, travelId)
+}
