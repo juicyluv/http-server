@@ -55,13 +55,22 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			users.GET("/:id", h.getUserById)
 			users.PUT("/:id", h.updateUser)
 			users.DELETE("/:id", h.deleteUser)
+
+			roles := users.Group("/roles")
+			{
+				roles.GET("/", h.getAllUserRoles)
+				roles.POST("/", h.createUserRole)
+				roles.GET("/:id", h.getUserRoleById)
+				roles.PUT("/:id", h.updateUserRole)
+				roles.DELETE("/:id", h.deleteUserRole)
+			}
 		}
 
 		travels := api.Group("/travels")
 		{
 			travels.GET("/", h.getAllTravels)
-			travels.GET("/:id", h.getTravelById)
 			travels.POST("/", h.createTravel)
+			travels.GET("/:id", h.getTravelById)
 			travels.PUT("/:id", h.updateTravel)
 			travels.DELETE("/:id", h.deleteTravel)
 		}
@@ -69,8 +78,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		places := api.Group("/places")
 		{
 			places.GET("/", h.getAllPlaces)
-			places.GET("/:id", h.getPlaceById)
 			places.POST("/", h.createPlace)
+			places.GET("/:id", h.getPlaceById)
 			places.PUT("/:id", h.updatePlace)
 			places.DELETE("/:id", h.deletePlace)
 		}
