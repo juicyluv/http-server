@@ -5,22 +5,25 @@ import (
 	"strings"
 
 	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository struct {
-	db *sqlx.DB
+	db          *sqlx.DB
+	travelsRepo interfaces.TravelRepository
 }
 
-// Creates new User Repository instance
-func NewUserRepository(db *sqlx.DB) *UserRepository {
+// Create new User Repository instance
+func NewUserRepository(db *sqlx.DB, travelRepo *interfaces.TravelRepository) *UserRepository {
 	return &UserRepository{
-		db: db,
+		db:          db,
+		travelsRepo: *travelRepo,
 	}
 }
 
-// Creates user in database and returns new user ID
+// Create user and return new user ID
 func (r *UserRepository) Create(u *models.User) (int, error) {
 	if err := u.HashPassword(); err != nil {
 		return 0, err
@@ -42,7 +45,7 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 	return userId, nil
 }
 
-// Finds user by email and returns User struct
+// Find user by email and return User struct
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	u := models.User{}
 	query := "SELECT id, email, username, role FROM users WHERE email=$1"
@@ -53,7 +56,7 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	return &u, nil
 }
 
-// Finds user by email and returns User struct with user password
+// Find user by email and return User struct with user password
 // Use it carefully
 func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, error) {
 	u := models.User{}
@@ -65,7 +68,7 @@ func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, er
 	return &u, nil
 }
 
-// Finds user by username and returns user instance
+// Find user by username and return user instance
 func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	u := models.User{}
 	query := "SELECT id, email, username, role FROM users WHERE username=$1"
@@ -76,7 +79,7 @@ func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	return &u, nil
 }
 
-// Finds user by Id and returns user instance
+// Find user by Id and return user instance
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	u := models.User{}
 	query := "SELECT id, email, username, role FROM users WHERE id=$1"
@@ -87,7 +90,7 @@ func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	return &u, nil
 }
 
-// Returns all users
+// Return all users
 func (r *UserRepository) GetAll() (*[]models.User, error) {
 	u := []models.User{}
 	query := "SELECT id, email, username, role FROM users"
@@ -98,7 +101,7 @@ func (r *UserRepository) GetAll() (*[]models.User, error) {
 	return &u, nil
 }
 
-// Updates the user
+// Update the user
 func (r *UserRepository) Update(userId int, user *models.UserUpdateInput) error {
 	values := make([]string, 0)
 	args := make([]interface{}, 0)
@@ -148,6 +151,21 @@ func (r *UserRepository) Delete(userId int) error {
 	return err
 }
 
+// Add user travel
+func (r *UserRepository) AddTravel(userId, travelId int) error {
+	query := "INSERT INTO users_travels VALUES ($1, $2)"
+	_, err := r.db.Exec(query, userId, travelId)
+	return err
+}
+
+// Remove user travel
+func (r *UserRepository) RemoveTravel(userId, travelId int) error {
+	query := "DELETE FROM users_travels WHERE user_id = $1 AND travel_id = $2"
+	_, err := r.db.Exec(query, userId, travelId)
+	return err
+}
+
+// hash user password
 func hashPassword(password string) (string, error) {
 	// Hash password
 	b, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
