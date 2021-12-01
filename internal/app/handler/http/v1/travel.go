@@ -72,7 +72,7 @@ func (h *Handler) updateTravel(c *gin.Context) {
 
 	travelId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		errorResponse(c, http.StatusBadRequest, "invalid travelId id")
+		errorResponse(c, http.StatusBadRequest, "invalid travel id")
 		return
 	}
 
