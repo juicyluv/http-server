@@ -13,12 +13,15 @@ type User struct {
 	Email             string `json:"email"`
 	Username          string `json:"username"`
 	EncryptedPassword string `json:"password,omitempty"`
+
+	Role int `json:"role"`
 }
 
 type UserUpdateInput struct {
 	Email    *string `json:"email"`
 	Username *string `json:"username"`
 	Password *string `json:"password,omitempty"`
+	Role     *int    `json:"role"`
 }
 
 // Validates creating user struct
