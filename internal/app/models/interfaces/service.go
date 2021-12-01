@@ -37,3 +37,11 @@ type PlaceService interface {
 	Update(placeId int, place *models.UpdatePlaceInput) error
 	Delete(placeId int) error
 }
+
+type UserRoleService interface {
+	Create(role *models.UserRole) (uint, error)
+	GetById(roleId int) (*models.UserRole, error)
+	GetAll() (*[]models.UserRole, error)
+	Update(roleId int, place *models.UpdateUserRole) error
+	Delete(roleId int) error
+}
