@@ -10,10 +10,11 @@ import (
 
 type Repository struct {
 	// Implemented interfaces
-	User   interfaces.UserRepository
-	Auth   interfaces.AuthRepository
-	Travel interfaces.TravelRepository
-	Place  interfaces.PlaceRepository
+	User     interfaces.UserRepository
+	Auth     interfaces.AuthRepository
+	Travel   interfaces.TravelRepository
+	Place    interfaces.PlaceRepository
+	UserRole interfaces.UserRoleRepository
 
 	config *Config
 	Db     *sqlx.DB
@@ -54,4 +55,5 @@ func (r *Repository) initRepositories() {
 	r.Auth = NewAuthRepository(r.Db, &r.User)
 	r.Travel = NewTravelRepository(r.Db)
 	r.Place = NewPlaceRepository(r.Db)
+	r.UserRole = NewUserRoleRepository(r.Db)
 }
