@@ -155,6 +155,24 @@ func (r *UserRepository) AddTravel(userId, travelId int) error {
 	return err
 }
 
+// Get user travels by user id
+func (r *UserRepository) GetTravels(userId int) (*[]models.Travel, error) {
+	var travelsIds []string
+	idsQuery := "SELECT travel_id FROM users_travels WHERE user_id=$1"
+	if err := r.db.Select(&travelsIds, idsQuery, userId); err != nil {
+		return nil, err
+	}
+
+	var travels []models.Travel
+	travelsQuery := strings.Join(travelsIds, ", ")
+	query := fmt.Sprintf("SELECT * FROM travels WHERE id IN (%s)", travelsQuery)
+	if err := r.db.Select(&travels, query); err != nil {
+		return nil, err
+	}
+
+	return &travels, nil
+}
+
 // Remove user travel
 func (r *UserRepository) RemoveTravel(userId, travelId int) error {
 	query := "DELETE FROM users_travels WHERE user_id = $1 AND travel_id = $2"
