@@ -56,6 +56,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			users.PUT("/:id", h.updateUser)
 			users.DELETE("/:id", h.deleteUser)
 
+			travels := users.Group("/travels")
+			{
+				travels.GET("/", h.getUserTravels)
+				travels.POST("/:id", h.addUserTravel)
+				travels.GET("/:id", h.getTravelById)
+				travels.DELETE("/:id", h.removeUserTravel)
+			}
+
 			roles := users.Group("/roles")
 			{
 				roles.GET("/", h.getAllUserRoles)
