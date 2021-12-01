@@ -39,3 +39,22 @@ func TestUserService_FindByEmail(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, noUser)
 }
+
+func TestUserService_GetByUsername(t *testing.T) {
+	s, teardown := service.NewTestService(t, dbURL)
+	defer teardown("users")
+
+	testUser := models.TestUser(t)
+
+	userId, err := s.User.SignUp(testUser)
+	assert.NoError(t, err)
+	assert.NotEqual(t, 0, userId)
+
+	user, err := s.User.GetByUsername(testUser.Username)
+	assert.NotNil(t, user)
+	assert.NoError(t, err)
+
+	noUser, err := s.User.GetByUsername("invalid nickname")
+	assert.Nil(t, noUser)
+	assert.Error(t, err)
+}
