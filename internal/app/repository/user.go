@@ -5,21 +5,18 @@ import (
 	"strings"
 
 	"github.com/ellywynn/http-server/internal/app/models"
-	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository struct {
-	db          *sqlx.DB
-	travelsRepo interfaces.TravelRepository
+	db *sqlx.DB
 }
 
 // Create new User Repository instance
-func NewUserRepository(db *sqlx.DB, travelRepo *interfaces.TravelRepository) *UserRepository {
+func NewUserRepository(db *sqlx.DB) *UserRepository {
 	return &UserRepository{
-		db:          db,
-		travelsRepo: *travelRepo,
+		db: db,
 	}
 }
 
