@@ -6,18 +6,20 @@ import (
 )
 
 type Service struct {
-	User   interfaces.UserService
-	Auth   interfaces.AuthService
-	Travel interfaces.TravelService
-	Place  interfaces.PlaceService
+	User     interfaces.UserService
+	Auth     interfaces.AuthService
+	Travel   interfaces.TravelService
+	Place    interfaces.PlaceService
+	UserRole interfaces.UserRoleService
 }
 
 // Returns new Service instance
 func NewService(repo *repository.Repository) *Service {
 	return &Service{
-		User:   NewUserService(&repo.User),
-		Auth:   NewAuthService(&repo.Auth),
-		Travel: NewTravelService(&repo.Travel),
-		Place:  NewPlaceService(&repo.Place),
+		User:     NewUserService(&repo.User),
+		Auth:     NewAuthService(&repo.Auth),
+		Travel:   NewTravelService(&repo.Travel),
+		Place:    NewPlaceService(&repo.Place),
+		UserRole: NewUserRoleService(&repo.UserRole),
 	}
 }
