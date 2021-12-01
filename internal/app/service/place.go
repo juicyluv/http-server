@@ -16,21 +16,21 @@ func NewPlaceService(repo *interfaces.PlaceRepository) interfaces.PlaceService {
 }
 
 func (ps *PlaceService) Create(place *models.Place) (uint, error) {
-	return 0, nil
+	return ps.repository.Create(place)
 }
 
 func (ps *PlaceService) GetAll() (*[]models.Place, error) {
-	return nil, nil
+	return ps.repository.FindAll()
 }
 
 func (ps *PlaceService) GetById(placeId int) (*models.Place, error) {
-	return nil, nil
+	return ps.repository.FindById(placeId)
 }
 
 func (ps *PlaceService) Update(placeId int, place *models.UpdatePlaceInput) error {
-	return nil
+	return ps.repository.Update(placeId, place)
 }
 
 func (pr *PlaceService) Delete(placeId int) error {
-	return nil
+	return pr.repository.Delete(placeId)
 }
