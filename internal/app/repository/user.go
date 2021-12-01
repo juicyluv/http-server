@@ -27,8 +27,14 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 	}
 
 	var userId int
-	query := "INSERT INTO users (email, username, encrypted_password) VALUES ($1, $2, $3) RETURNING id"
-	err := r.db.QueryRow(query, u.Email, u.Username, u.EncryptedPassword).Scan(&userId)
+	query := "INSERT INTO users VALUES (DEFAULT, $1, $2, $3, $4) RETURNING id"
+	err := r.db.QueryRow(
+		query,
+		u.Email,
+		u.Username,
+		u.EncryptedPassword,
+		u.Role,
+	).Scan(&userId)
 	if err != nil {
 		return 0, err
 	}
@@ -39,7 +45,7 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 // Finds user by email and returns User struct
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	u := models.User{}
-	query := "SELECT id, email, username FROM users WHERE email=$1"
+	query := "SELECT id, email, username, role FROM users WHERE email=$1"
 	if err := r.db.Get(&u, query, email); err != nil {
 		return nil, err
 	}
@@ -51,7 +57,7 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 // Use it carefully
 func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, error) {
 	u := models.User{}
-	query := "SELECT id, email, username, encrypted_password FROM users WHERE email=$1"
+	query := "SELECT id, email, username, encrypted_password, role FROM users WHERE email=$1"
 	if err := r.db.Get(&u, query, email); err != nil {
 		return nil, err
 	}
@@ -62,7 +68,7 @@ func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, er
 // Finds user by username and returns user instance
 func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	u := models.User{}
-	query := "SELECT id, email, username FROM users WHERE username=$1"
+	query := "SELECT id, email, username, role FROM users WHERE username=$1"
 	if err := r.db.Get(&u, query, username); err != nil {
 		return nil, err
 	}
@@ -73,7 +79,7 @@ func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 // Finds user by Id and returns user instance
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	u := models.User{}
-	query := "SELECT id, email, username FROM users WHERE id=$1"
+	query := "SELECT id, email, username, role FROM users WHERE id=$1"
 	if err := r.db.Get(&u, query, userId); err != nil {
 		return nil, err
 	}
@@ -84,7 +90,7 @@ func (r *UserRepository) FindById(userId int) (*models.User, error) {
 // Returns all users
 func (r *UserRepository) GetAll() (*[]models.User, error) {
 	u := []models.User{}
-	query := "SELECT id, email, username FROM users"
+	query := "SELECT id, email, username, role FROM users"
 	if err := r.db.Select(&u, query); err != nil {
 		return nil, err
 	}
@@ -118,6 +124,12 @@ func (r *UserRepository) Update(userId int, user *models.UserUpdateInput) error 
 		}
 		values = append(values, fmt.Sprintf("encrypted_password=$%d", argId))
 		args = append(args, hashedPassword)
+		argId++
+	}
+
+	if user.Role != nil {
+		values = append(values, fmt.Sprintf("role=$%d", argId))
+		args = append(args, *user.Role)
 		argId++
 	}
 
