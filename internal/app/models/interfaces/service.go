@@ -42,6 +42,6 @@ type UserRoleService interface {
 	Create(role *models.UserRole) (uint, error)
 	GetById(roleId int) (*models.UserRole, error)
 	GetAll() (*[]models.UserRole, error)
-	Update(roleId int, place *models.UpdateUserRole) error
+	Update(roleId int, place *models.UpdateUserRoleInput) error
 	Delete(roleId int) error
 }

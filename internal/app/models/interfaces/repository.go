@@ -38,6 +38,6 @@ type UserRoleRepository interface {
 	Create(role *models.UserRole) (uint, error)
 	FindById(roleId int) (*models.UserRole, error)
 	FindAll() (*[]models.UserRole, error)
-	Update(roleId int, place *models.UpdateUserRole) error
+	Update(roleId int, place *models.UpdateUserRoleInput) error
 	Delete(roleId int) error
 }

@@ -5,6 +5,6 @@ type UserRole struct {
 	Role string `json:"role"`
 }
 
-type UpdateUserRole struct {
+type UpdateUserRoleInput struct {
 	Role *string `json:"role"`
 }
