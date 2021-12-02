@@ -10,6 +10,10 @@ type UserService interface {
 	GetAll() (*[]models.User, error)
 	Update(userId int, user *models.UserUpdateInput) error
 	Delete(userId int) error
+
+	AddTravel(userId, travelId int) error
+	GetTravels(userId int) (*[]models.Travel, error)
+	RemoveTravel(userId, travelId int) error
 }
 
 type AuthService interface {
