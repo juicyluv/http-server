@@ -5,7 +5,6 @@ import (
 
 	"github.com/ellywynn/http-server/internal/app/models"
 	"github.com/ellywynn/http-server/internal/app/repository"
-	"github.com/lane-c-wagner/go-tinydate"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,16 +12,7 @@ func TestTravelRepository_Create(t *testing.T) {
 	r, teardown := repository.NewTestRepository(t, dbURL)
 	defer teardown("travels")
 
-	travel := &models.Travel{
-		Title:        "Title",
-		DurationDays: 10,
-		Price:        200,
-		PartySize:    10,
-		Complexity:   4,
-		Place:        1,
-		Description:  "desc",
-		Date:         tinydate.Now().ToTime(),
-	}
+	travel := models.TestTravel(t)
 
 	travelId, err := r.Travel.Create(travel)
 
@@ -34,16 +24,7 @@ func TestTravelRepository_FindAll(t *testing.T) {
 	r, teardown := repository.NewTestRepository(t, dbURL)
 	defer teardown("travels")
 
-	travel := &models.Travel{
-		Title:        "Title",
-		DurationDays: 10,
-		Price:        200,
-		PartySize:    10,
-		Complexity:   4,
-		Place:        1,
-		Description:  "desc",
-		Date:         tinydate.Now().ToTime(),
-	}
+	travel := models.TestTravel(t)
 
 	travelId1, err := r.Travel.Create(travel)
 
@@ -71,16 +52,7 @@ func TestTravelRepository_FindById(t *testing.T) {
 	r, teardown := repository.NewTestRepository(t, dbURL)
 	defer teardown("travels")
 
-	travel := &models.Travel{
-		Title:        "Title",
-		DurationDays: 10,
-		Price:        200,
-		PartySize:    10,
-		Complexity:   4,
-		Place:        1,
-		Description:  "desc",
-		Date:         tinydate.Now().ToTime(),
-	}
+	travel := models.TestTravel(t)
 
 	travelId, err := r.Travel.Create(travel)
 
@@ -99,16 +71,7 @@ func TestTravelRepository_Update(t *testing.T) {
 	r, teardown := repository.NewTestRepository(t, dbURL)
 	defer teardown("travels")
 
-	travel := &models.Travel{
-		Title:        "Title",
-		DurationDays: 10,
-		Price:        200,
-		PartySize:    10,
-		Complexity:   4,
-		Place:        1,
-		Description:  "desc",
-		Date:         tinydate.Now().ToTime(),
-	}
+	travel := models.TestTravel(t)
 
 	travelId, err := r.Travel.Create(travel)
 
@@ -138,23 +101,14 @@ func TestTravelRepository_Update(t *testing.T) {
 	assert.Equal(t, updatedTravel.Title, title)
 	assert.Equal(t, updatedTravel.DurationDays, days)
 	assert.Equal(t, updatedTravel.Description, description)
-	assert.Equal(t, updatedTravel.PartySize, partySize)
+	assert.Equal(t, *updatedTravel.PartySize, partySize)
 }
 
 func TestTravelRepository_Delete(t *testing.T) {
 	r, teardown := repository.NewTestRepository(t, dbURL)
 	defer teardown("travels")
 
-	travel := &models.Travel{
-		Title:        "Title",
-		DurationDays: 10,
-		Price:        200,
-		PartySize:    10,
-		Complexity:   4,
-		Place:        1,
-		Description:  "desc",
-		Date:         tinydate.Now().ToTime(),
-	}
+	travel := models.TestTravel(t)
 
 	travelId, err := r.Travel.Create(travel)
 
@@ -165,6 +119,6 @@ func TestTravelRepository_Delete(t *testing.T) {
 	assert.NoError(t, err)
 
 	tr, err := r.Travel.FindById(int(travelId))
-	assert.NoError(t, err)
+	assert.Error(t, err)
 	assert.Nil(t, tr)
 }
