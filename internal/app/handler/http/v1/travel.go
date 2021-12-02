@@ -17,7 +17,7 @@ func (h *Handler) createTravel(c *gin.Context) {
 	}
 
 	if err := input.Validate(); err != nil {
-		errorResponse(c, http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 
