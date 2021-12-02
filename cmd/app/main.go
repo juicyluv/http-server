@@ -17,6 +17,13 @@ func init() {
 	flag.Parse()
 }
 
+// @title Travels API
+// @version 1.0
+// @description API Server for Travels Web Application
+
+// @host localhost:3000
+// @BasePath /api/v1
+
 func main() {
 	config := server.NewConfig(configPath)
 
