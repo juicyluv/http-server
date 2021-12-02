@@ -158,12 +158,17 @@ func (r *UserRepository) AddTravel(userId, travelId int) error {
 // Get user travels by user id
 func (r *UserRepository) GetTravels(userId int) (*[]models.Travel, error) {
 	var travelsIds []string
+	var travels []models.Travel
+
 	idsQuery := "SELECT travel_id FROM users_travels WHERE user_id=$1"
 	if err := r.db.Select(&travelsIds, idsQuery, userId); err != nil {
 		return nil, err
 	}
 
-	var travels []models.Travel
+	if len(travelsIds) == 0 {
+		return &travels, nil
+	}
+
 	travelsQuery := strings.Join(travelsIds, ", ")
 	query := fmt.Sprintf("SELECT * FROM travels WHERE id IN (%s)", travelsQuery)
 	if err := r.db.Select(&travels, query); err != nil {
