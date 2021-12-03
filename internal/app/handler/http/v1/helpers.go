@@ -20,3 +20,8 @@ func getSessionUserId(h *Handler, c *gin.Context) (int, error) {
 
 	return userIdInt, nil
 }
+
+func isAdmin(h *Handler, c *gin.Context) bool {
+	session, _ := h.sessionStore.Get(c.Request, coockieName)
+	return session.Values["role"] == "Admin"
+}
