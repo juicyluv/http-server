@@ -17,13 +17,13 @@ type UserService interface {
 }
 
 type AuthService interface {
-	LogIn(input *AuthLoginStruct) (*models.User, error)
+	LogIn(input AuthLoginStruct) (*models.User, error)
 	LogOut() error
 }
 
 type AuthLoginStruct struct {
-	Email    string
-	Password string
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type TravelService interface {
