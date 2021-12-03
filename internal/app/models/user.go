@@ -9,12 +9,11 @@ import (
 )
 
 type User struct {
-	Id                int    `json:"id"`
-	Email             string `json:"email"`
-	Username          string `json:"username"`
-	EncryptedPassword string `json:"password,omitempty"`
-
-	Role int `json:"role"`
+	Id                int     `json:"id"`
+	Email             string  `json:"email"`
+	Username          string  `json:"username"`
+	EncryptedPassword string  `json:"password,omitempty"`
+	Role              *string `json:"role"`
 }
 
 type UserUpdateInput struct {
