@@ -11,9 +11,18 @@ func authenticate(sessionStore sessions.Store) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session, _ := sessionStore.Get(c.Request, coockieName)
 		if _, exists := session.Values["user_id"]; !exists {
-			c.JSON(http.StatusForbidden, map[string]string{
-				"error": "you need to authorize to access this resource",
-			})
+			errorResponse(c, http.StatusForbidden,
+				"you need to authorize to access this resource")
+			c.Abort()
+		}
+	}
+}
+
+func requireRole(role string, sessionStore sessions.Store) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session, _ := sessionStore.Get(c.Request, coockieName)
+		if session.Values["role"] != role {
+			errorResponse(c, http.StatusForbidden, "you have no access to this resource")
 			c.Abort()
 		}
 	}
