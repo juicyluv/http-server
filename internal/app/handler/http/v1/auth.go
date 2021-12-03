@@ -58,6 +58,7 @@ func (h *Handler) signIn(c *gin.Context) {
 	session.Values["user_id"] = user.Id
 	session.Values["email"] = user.Email
 	session.Values["username"] = user.Username
+	session.Values["role"] = user.Role
 
 	if err := session.Save(c.Request, c.Writer); err != nil {
 		errorResponse(c, http.StatusInternalServerError, "unable save user session")
