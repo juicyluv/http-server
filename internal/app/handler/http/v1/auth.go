@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/ellywynn/http-server/internal/app/models"
@@ -17,6 +18,34 @@ func (h *Handler) signUp(c *gin.Context) {
 
 	if err := input.Validate(); err != nil {
 		errorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// If creating user with role, require admin role
+	if input.Role != nil {
+		if !isAdmin(h, c) {
+			errorResponse(c, http.StatusForbidden, "you have not access to this action")
+			return
+		}
+	}
+
+	emailTaken, err := h.service.User.GetByEmail(input.Email)
+	if err != nil && err != sql.ErrNoRows {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if emailTaken != nil {
+		errorResponse(c, http.StatusBadRequest, "email taken")
+		return
+	}
+
+	usernameTaken, err := h.service.User.GetByUsername(input.Username)
+	if err != nil && err != sql.ErrNoRows {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if usernameTaken != nil {
+		errorResponse(c, http.StatusBadRequest, "username taken")
 		return
 	}
 
@@ -48,7 +77,7 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	user, err := h.service.Auth.LogIn(&input)
+	user, err := h.service.Auth.LogIn(input)
 	if err != nil {
 		errorResponse(c, http.StatusUnauthorized, err.Error())
 		return
@@ -76,8 +105,11 @@ func (h *Handler) signOut(c *gin.Context) {
 	}
 
 	// Clear user session
-	for k := range session.Values {
-		delete(session.Values, k)
+	session.Options.MaxAge = -1
+	err = session.Save(c.Request, c.Writer)
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, "failed to delete session")
+		return
 	}
 
 	c.Status(http.StatusOK)
