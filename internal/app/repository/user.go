@@ -84,7 +84,7 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, error) {
 	u := models.User{}
 	query := `
-	SELECT u. id, u. email, u.username, u.encrypted_password, ur.role AS role 
+	SELECT u.id, u.email, u.username, u.encrypted_password, ur.role AS role 
 	FROM users u
 	INNER JOIN user_roles ur
 	ON u.role = ur.id
