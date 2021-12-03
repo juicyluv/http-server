@@ -12,7 +12,7 @@ type User struct {
 	Id                int     `json:"id"`
 	Email             string  `json:"email"`
 	Username          string  `json:"username"`
-	EncryptedPassword string  `json:"password,omitempty"`
+	EncryptedPassword string  `json:"password,omitempty" db:"encrypted_password"`
 	Role              *string `json:"role"`
 }
 
