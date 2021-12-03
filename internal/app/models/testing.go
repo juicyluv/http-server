@@ -8,11 +8,12 @@ import (
 
 // Returns default user entity
 func TestUser(t *testing.T) *User {
+	userRole := "User"
 	return &User{
 		Email:             "user@mail.com",
 		Username:          "admin",
 		EncryptedPassword: "qwerty",
-		Role:              1,
+		Role:              &userRole,
 	}
 }
 
