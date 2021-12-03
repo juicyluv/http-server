@@ -21,7 +21,7 @@ func TestAuthRepository_LogIn(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEqual(t, 0, userId)
 
-	u, err := r.Auth.LogIn(&interfaces.AuthLoginStruct{
+	u, err := r.Auth.LogIn(interfaces.AuthLoginStruct{
 		Email:    testUser.Email,
 		Password: password,
 	})
