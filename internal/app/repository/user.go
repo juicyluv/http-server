@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -26,15 +28,34 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 		return 0, err
 	}
 
+	// If user role presented, find its id
+	var role int
+	if u.Role != nil {
+		err := r.db.Get(&role, "SELECT id FROM user_roles WHERE role = $1", *u.Role)
+		if err != nil {
+			// If user role is invalid, return an error
+			if err == sql.ErrNoRows {
+				return 0, errors.New("there is no role " + *u.Role)
+			}
+			return 0, err
+		}
+	}
+
+	valuesQuery := "(DEFAULT, $1, $2, $3, $4)"
+	args := make([]interface{}, 0)
+	args = append(args, u.Email, u.Username, u.EncryptedPassword)
+
+	// If role is not presented, use default value
+	// Otherwise, add role to arguments
+	if role == 0 {
+		valuesQuery = "(DEFAULT, $1, $2, $3)"
+	} else {
+		args = append(args, role)
+	}
+
 	var userId int
-	query := "INSERT INTO users VALUES (DEFAULT, $1, $2, $3, $4) RETURNING id"
-	err := r.db.QueryRow(
-		query,
-		u.Email,
-		u.Username,
-		u.EncryptedPassword,
-		u.Role,
-	).Scan(&userId)
+	query := fmt.Sprintf("INSERT INTO users VALUES %s RETURNING id", valuesQuery)
+	err := r.db.QueryRow(query, args...).Scan(&userId)
 	if err != nil {
 		return 0, err
 	}
@@ -45,7 +66,12 @@ func (r *UserRepository) Create(u *models.User) (int, error) {
 // Find user by email and return User struct
 func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 	u := models.User{}
-	query := "SELECT id, email, username, role FROM users WHERE email=$1"
+	query := `
+	SELECT u. id, u. email, u.username, ur.role AS role 
+	FROM users u
+	INNER JOIN user_roles ur
+	ON u.role = ur.id
+	WHERE u.email=$1`
 	if err := r.db.Get(&u, query, email); err != nil {
 		return nil, err
 	}
@@ -57,7 +83,12 @@ func (r *UserRepository) FindByEmail(email string) (*models.User, error) {
 // Use it carefully
 func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, error) {
 	u := models.User{}
-	query := "SELECT id, email, username, encrypted_password, role FROM users WHERE email=$1"
+	query := `
+	SELECT u. id, u. email, u.username, u.encrypted_password, ur.role AS role 
+	FROM users u
+	INNER JOIN user_roles ur
+	ON u.role = ur.id
+	WHERE u.email=$1`
 	if err := r.db.Get(&u, query, email); err != nil {
 		return nil, err
 	}
@@ -68,7 +99,12 @@ func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, er
 // Find user by username and return user instance
 func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	u := models.User{}
-	query := "SELECT id, email, username, role FROM users WHERE username=$1"
+	query := `
+	SELECT u. id, u. email, u.username, ur.role AS role 
+	FROM users u
+	INNER JOIN user_roles ur
+	ON u.role = ur.id
+	WHERE u.username=$1`
 	if err := r.db.Get(&u, query, username); err != nil {
 		return nil, err
 	}
@@ -79,7 +115,12 @@ func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 // Find user by Id and return user instance
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	u := models.User{}
-	query := "SELECT id, email, username, role FROM users WHERE id=$1"
+	query := `
+	SELECT u. id, u. email, u.username, ur.role AS role 
+	FROM users u
+	INNER JOIN user_roles ur
+	ON u.role = ur.id
+	WHERE u.id=$1`
 	if err := r.db.Get(&u, query, userId); err != nil {
 		return nil, err
 	}
@@ -90,7 +131,11 @@ func (r *UserRepository) FindById(userId int) (*models.User, error) {
 // Return all users
 func (r *UserRepository) GetAll() (*[]models.User, error) {
 	u := []models.User{}
-	query := "SELECT id, email, username, role FROM users"
+	query := `
+	SELECT u. id, u. email, u.username, ur.role AS role 
+	FROM users u
+	INNER JOIN user_roles ur
+	ON u.role = ur.id`
 	if err := r.db.Select(&u, query); err != nil {
 		return nil, err
 	}
@@ -143,9 +188,24 @@ func (r *UserRepository) Update(userId int, user *models.UserUpdateInput) error 
 
 // Deletes the user
 func (r *UserRepository) Delete(userId int) error {
-	query := "DELETE FROM users WHERE id = $1"
-	_, err := r.db.Exec(query, userId)
-	return err
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+	query := "DELETE FROM users_travels WHERE user_id = $1"
+	_, err = r.db.Exec(query, userId)
+	if err != nil {
+		return err
+	}
+
+	query = "DELETE FROM users WHERE id = $1"
+	_, err = tx.Exec(query, userId)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return nil
 }
 
 // Add user travel
