@@ -59,7 +59,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			users.GET("/:id/travels", h.getUserTravelsByUserId)
 			users.POST("/:user_id/travels/:travel_id", h.addUserTravelByUserId)
 			users.PUT("/:id", h.updateUser)
-			users.DELETE("/:id", h.deleteUser)
+			users.DELETE(
+				"/:id",
+				authenticate(h.sessionStore),
+				requireRole("Admin", h.sessionStore),
+				h.deleteUser,
+			)
 
 			travels := users.Group("/travels")
 			{
