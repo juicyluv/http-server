@@ -47,7 +47,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		auth.POST("/sign-in", h.signIn)
 		auth.POST("/sign-up", h.signUp)
-		auth.GET("/logout", h.signOut)
+		auth.GET("/sign-out", h.signOut)
 	}
 
 	// API routes
@@ -110,8 +110,9 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	index := router.Group("/")
 	{
 		index.GET("", h.renderIndex)
-		// root.GET("sign-in", h.renderSignIn)
+		index.GET("sign-in", h.renderSignIn)
 		index.GET("sign-up", h.renderSignUp)
+		index.GET("sign-out", h.signOut)
 		// root.GET("orders", h.renderOrders)
 		// root.GET("travels/:id", h.renderTravel)
 	}
