@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -8,17 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	templatesPath = "client/"
+var (
+	t = template.Must(template.ParseGlob("client/*.html"))
 )
 
 func (h *Handler) renderIndex(c *gin.Context) {
-	tmpl, err := template.ParseFiles(templatesPath + "index.html")
-	if err != nil {
-		errorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
 	travels, err := h.service.Travel.GetAll()
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
@@ -31,21 +26,42 @@ func (h *Handler) renderIndex(c *gin.Context) {
 		return
 	}
 
-	tmpl.Execute(c.Writer, struct {
-		Travels []models.Travel
-		User    *models.User
+	var isAuth bool = false
+	var username, email, role string
+	var userId int
+	if user != nil {
+		isAuth = true
+		username = user.Username
+		email = user.Email
+		role = *user.Role
+		userId = user.Id
+	}
+
+	if err = t.ExecuteTemplate(c.Writer, "index.html", struct {
+		Travels   []models.Travel
+		PageTitle string
+		UserId    int
+		Username  string
+		Email     string
+		Role      string
+		IsAuth    bool
 	}{
-		Travels: *travels,
-		User:    user,
-	})
+		PageTitle: "TRAVELS",
+		Travels:   *travels,
+		UserId:    userId,
+		Username:  username,
+		Email:     email,
+		Role:      role,
+		IsAuth:    isAuth,
+	}); err != nil {
+		fmt.Println(err.Error())
+	}
 }
 
 func (h *Handler) renderSignUp(c *gin.Context) {
-	tmpl, err := template.ParseFiles(templatesPath + "register.html")
-	if err != nil {
-		errorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
+	t.ExecuteTemplate(c.Writer, "signup.html", nil)
+}
 
-	tmpl.Execute(c.Writer, nil)
+func (h *Handler) renderSignIn(c *gin.Context) {
+	t.ExecuteTemplate(c.Writer, "signin.html", nil)
 }
