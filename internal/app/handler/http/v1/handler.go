@@ -42,6 +42,7 @@ func NewHandler(service *service.Service) *Handler {
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
+	// Auth routes
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-in", h.signIn)
@@ -49,6 +50,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		auth.GET("/logout", h.signOut)
 	}
 
+	// API routes
 	api := router.Group("/api/v1")
 	{
 		users := api.Group("/users")
@@ -102,7 +104,20 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		}
 	}
 
+	// Swagger documentation page
 	router.GET("/api/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	index := router.Group("/")
+	{
+		index.GET("", h.renderIndex)
+		// root.GET("sign-in", h.renderSignIn)
+		index.GET("sign-up", h.renderSignUp)
+		// root.GET("orders", h.renderOrders)
+		// root.GET("travels/:id", h.renderTravel)
+	}
+
+	// Static files
+	router.Static("/static", "./client/static")
 
 	return router
 }
