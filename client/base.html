@@ -11,37 +11,45 @@
     <title>TRAVELS</title>
     {{end}}
 
+    <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/header.css">
+    <script src="https://kit.fontawesome.com/104d2e5ecb.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <header>
-        <h1 class="logo">TRAVELS</h1>
-        <nav>
-            <ul class="menu">
-                <li class="link">
-                    <a href="/">Путешествия</a>
+        <a class="header__logo link__ref" href="/">TRAVELS</a>
+        <nav class="header__navbar">
+            <ul class="navbar__menu">
+                <li class="menu__link">
+                    <a class="link__ref" href="/">Путешествия</a>
                 </li>
                 {{if .IsAuth}}
-                <li class="link">
-                    <a href="/orders">Мои заказы</a>
+                <li class="menu__link">
+                    <a class="link__ref" href="/orders">Мои заказы</a>
                 </li>
-                <li class="link">
-                    <a href="/user/{{.UserId}}">{{.Username}}</a>
+                <li class="menu__link">
+                    <a class="link__ref" href="/sign-out">Выйти</a>
+                </li>
+                <li class="menu__link_username">
+                    <a class="link__ref" href="/user/{{.UserId}}">{{.Username}}</a>
+                    <div class="link__user-avatar"></div>
                 </li>
                 {{else}}
-                <li class="link">
-                    <a href="/sign-in">Войти</a>
+                <li class="menu__link">
+                    <a class="link__ref" href="/sign-in">Войти</a>
                 </li>
-                <li class="link">
-                    <a href="/sign-up">Регистрация</a>
+                <li class="menu__link">
+                    <a class="link__ref" href="/sign-up">Регистрация</a>
                 </li>
                 {{end}}
             </ul>
         </nav>
     </header>
 
-    {{block "body" .}} {{end}}
+    <div class="container">
+        {{block "body" .}} {{end}}
+    </div>
 </body>
 
 </html>
