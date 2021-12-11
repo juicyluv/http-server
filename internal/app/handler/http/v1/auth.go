@@ -112,5 +112,5 @@ func (h *Handler) signOut(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusOK)
+	c.Redirect(http.StatusTemporaryRedirect, "/")
 }
