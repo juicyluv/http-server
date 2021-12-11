@@ -1,0 +1,15 @@
+{{template "base.html" .}}
+
+{{define "body"}}
+
+<div class="form-container">
+    <h2 class="form__text">Войти</h2>
+    <form class="form" onsubmit="return sendForm(event)" action="/auth/sign-in" method="POST">
+        <input class="form__input" type="text" id="email" name="email" placeholder="Email">
+        <input class="form__input" type="password" name="password" id="password" placeholder="Пароль" />
+        <button class="form__btn" type="submit">Войти</button>
+    </form>
+</div>
+
+<script src="/static/js/login.js"></script>
+{{end}}
