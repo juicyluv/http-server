@@ -29,6 +29,6 @@ func TestTravel(t *testing.T) *Travel {
 		Complexity:   4,
 		Place:        1,
 		Description:  "desc",
-		Date:         tinydate.Now().ToTime(),
+		Date:         tinydate.Now().Format("20060102"),
 	}
 }
