@@ -113,8 +113,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		index.GET("sign-in", h.renderSignIn)
 		index.GET("sign-up", h.renderSignUp)
 		index.GET("sign-out", h.signOut)
+		index.GET("/travel/:id", h.renderTravel)
 		// root.GET("orders", h.renderOrders)
-		// root.GET("travels/:id", h.renderTravel)
 	}
 
 	// Static files
