@@ -1,0 +1,1 @@
+ALTER TABLE travels DROP COLUMN image_url;
