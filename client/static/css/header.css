@@ -1,0 +1,57 @@
+header {
+    width: 100%;
+    height: 80px;
+    background: #81B3FF;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.header__logo {
+    font-size: 24px;
+    margin-left: 100px;
+    color: #fff;
+}
+
+.header__navbar {
+    margin-right: 100px;
+    display: flex;
+}
+
+.navbar__menu {
+    display: flex;
+    list-style: none;
+}
+
+.menu__link {
+    margin-left: 30px;
+}
+
+.link__ref {
+    color: #fff;
+    font-size: 24px;
+    font-family: 'Roboto', sans-serif;
+    text-decoration: none;
+}
+
+.link__ref:hover {
+    color: #0085FF;
+}
+
+.menu__link_username {
+    margin-left: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.link__user-avatar {
+    width: 30px;
+    height: 30px;
+    background: red;
+    border-radius: 50%;
+    margin-left: 10px;
+}
