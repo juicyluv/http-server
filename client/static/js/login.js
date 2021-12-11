@@ -9,18 +9,14 @@ async function sendForm(event) {
     }
 
     try {
-        alert(data)
-
-        const res = await fetch('http://localhost:3000/auth/sign-in', {
+        await fetch('http://localhost:3000/auth/sign-in', {
             method: "POST",
             body: JSON.stringify(data)
         });
 
-        console.log(res)
-
-        // location.replace("http://localhost:3000/");
+        location.replace("http://localhost:3000/");
     } catch (error) {
-        alert(error);
+        console.log(error);
     }
     return false;
 }
