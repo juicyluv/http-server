@@ -1,0 +1,23 @@
+{{template "base.html" .}}
+
+{{define "body"}}
+
+<div class="travel-container" id={{.Travel.Id}}>
+    <img src="" alt="" class="travel__image">
+    <div class="travel__description">
+        <p class="description__title">{{.Travel.Title}}</p>
+        <p class="description__place">{{.Travel.Place}}</p>
+        <p class="description__description">{{.Travel.Description}}</p>
+        <p class="description__duration">Длительность: {{.Travel.DurationDays}} дн</p>
+        <p class="description__date">Дата начала: {{.Travel.Date}}</p>
+        <p class="description__complexity">Сложность: {{.Travel.Complexity}}/5</p>
+        {{if .Travel.PartySize}}
+        <p class="description__party">Группа: {{.Travel.PartySize}} человек</p>
+        {{end}}
+        <p class="description__price">Цена: {{.Travel.Price}}</p>
+        <button class="description__btn">ЗАКАЗАТЬ</button>
+    </div>
+</div>
+
+<script src="/static/js/travel.js"></script>
+{{end}}
