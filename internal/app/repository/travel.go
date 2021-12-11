@@ -5,16 +5,19 @@ import (
 	"strings"
 
 	"github.com/ellywynn/http-server/internal/app/models"
+	"github.com/ellywynn/http-server/internal/app/models/interfaces"
 	"github.com/jmoiron/sqlx"
 )
 
 type TravelRepository struct {
-	db *sqlx.DB
+	db  *sqlx.DB
+	cld interfaces.CloudinaryService
 }
 
-func NewTravelRepository(db *sqlx.DB) *TravelRepository {
+func NewTravelRepository(db *sqlx.DB, cld interfaces.CloudinaryService) *TravelRepository {
 	return &TravelRepository{
-		db: db,
+		db:  db,
+		cld: cld,
 	}
 }
 
@@ -50,6 +53,10 @@ func (tr *TravelRepository) FindAll() (*[]models.Travel, error) {
 		return nil, err
 	}
 
+	for i := range travels {
+		travels[i].FormatDate()
+	}
+
 	return &travels, nil
 }
 
@@ -61,6 +68,7 @@ func (tr *TravelRepository) FindById(travelId int) (*models.Travel, error) {
 		WHERE t.id = $1
 	`
 	err := tr.db.Get(&travel, query, travelId)
+	travel.FormatDate()
 
 	if err != nil {
 		return nil, err
@@ -112,11 +120,23 @@ func (tr *TravelRepository) Update(travelId int, travel *models.UpdateTravelInpu
 
 	if travel.Date != nil {
 		values = append(values, fmt.Sprintf("date=$%d", argId))
-		args = append(args, travel.Date.String())
+		args = append(args, *travel.Date)
 		argId++
 	}
 
 	if travel.Place != nil {
+		values = append(values, fmt.Sprintf("place=$%d", argId))
+		args = append(args, *travel.Place)
+		argId++
+	}
+
+	if travel.ImageURL != nil {
+		values = append(values, fmt.Sprintf("image_url=$%d", argId))
+		args = append(args, *travel.ImageURL)
+		argId++
+	}
+
+	if travel.Image != nil {
 		values = append(values, fmt.Sprintf("place=$%d", argId))
 		args = append(args, *travel.Place)
 		argId++
