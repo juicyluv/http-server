@@ -16,7 +16,7 @@ async function sendForm(event) {
             body: JSON.stringify(data)
         });
 
-        location.replace("http://localhost:3000/");
+        location.replace("http://localhost:3000/sign-in");
     } catch (error) {
         alert(error)
     }
