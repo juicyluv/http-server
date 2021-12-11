@@ -49,3 +49,7 @@ type UserRoleService interface {
 	Update(roleId int, place *models.UpdateUserRoleInput) error
 	Delete(roleId int) error
 }
+
+type CloudinaryService interface {
+	UploadImage(image, name, folder string) (string, error)
+}
