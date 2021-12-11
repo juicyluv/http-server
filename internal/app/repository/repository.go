@@ -16,6 +16,8 @@ type Repository struct {
 	Place    interfaces.PlaceRepository
 	UserRole interfaces.UserRoleRepository
 
+	cld interfaces.CloudinaryService
+
 	config *Config
 	Db     *sqlx.DB
 }
@@ -24,6 +26,7 @@ type Repository struct {
 func NewRepository(config *Config) *Repository {
 	return &Repository{
 		config: config,
+		cld:    NewCloudinaryService(),
 	}
 }
 
@@ -53,7 +56,7 @@ func (r *Repository) Close() {
 func (r *Repository) initRepositories() {
 	r.User = NewUserRepository(r.Db)
 	r.Auth = NewAuthRepository(r.Db, &r.User)
-	r.Travel = NewTravelRepository(r.Db)
+	r.Travel = NewTravelRepository(r.Db, r.cld)
 	r.Place = NewPlaceRepository(r.Db)
 	r.UserRole = NewUserRoleRepository(r.Db)
 }
