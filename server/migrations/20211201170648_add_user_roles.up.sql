@@ -1,0 +1,11 @@
+CREATE TABLE user_roles(
+    id SERIAL PRIMARY KEY NOT NULL,
+    role VARCHAR(20) NOT NULL
+);
+
+INSERT INTO user_roles VALUES(DEFAULT, 'User');
+INSERT INTO user_roles VALUES(DEFAULT, 'Moderator');
+INSERT INTO user_roles VALUES(DEFAULT, 'Admin');
+
+ALTER TABLE users ADD COLUMN role INT NOT NULL DEFAULT 1;
+ALTER TABLE users ADD FOREIGN KEY(role) REFERENCES user_roles(id);
