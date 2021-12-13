@@ -18,7 +18,6 @@ type UserService interface {
 
 type AuthService interface {
 	LogIn(input AuthLoginStruct) (*models.User, error)
-	LogOut() error
 }
 
 type AuthLoginStruct struct {
