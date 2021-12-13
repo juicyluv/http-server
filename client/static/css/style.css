@@ -79,6 +79,9 @@ body {
 }
 
 .order-price__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-left: 15px;
     width: 100px;
     height: 25px;
@@ -87,6 +90,7 @@ body {
     color: #fff;
     font-family: 'Roboto', sans-serif;
     outline: none;
+    text-decoration: none;
     border: none;
 }
 
@@ -163,7 +167,7 @@ body {
     margin-top: 30px;
 }
 
-.travel__image {
+.travel__image_single {
     width: 100%;
     height: 300px;
 }
@@ -204,4 +208,12 @@ body {
     cursor: pointer;
     background: #004FC6;
     border: 1px solid #fff;
+}
+
+.no-orders-text {
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 50px;
 }
