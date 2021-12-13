@@ -49,6 +49,7 @@ func (t *Travel) Validate() error {
 	)
 }
 
+// Formates date to display only date
 func (t *Travel) FormatDate() {
 	t.Date = strings.Split(t.Date, "T")[0]
 }
