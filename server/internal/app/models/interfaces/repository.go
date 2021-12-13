@@ -4,7 +4,6 @@ import "github.com/ellywynn/http-server/server/internal/app/models"
 
 type AuthRepository interface {
 	LogIn(input AuthLoginStruct) (*models.User, error)
-	LogOut() error
 }
 
 type UserRepository interface {
