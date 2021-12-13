@@ -100,7 +100,7 @@ func (r *UserRepository) FindByEmailWithPassword(email string) (*models.User, er
 func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 	u := models.User{}
 	query := `
-	SELECT u. id, u. email, u.username, ur.role AS role 
+	SELECT u.id, u.email, u.username, ur.role AS role 
 	FROM users u
 	INNER JOIN user_roles ur
 	ON u.role = ur.id
@@ -116,7 +116,7 @@ func (r *UserRepository) FindByUsername(username string) (*models.User, error) {
 func (r *UserRepository) FindById(userId int) (*models.User, error) {
 	u := models.User{}
 	query := `
-	SELECT u. id, u. email, u.username, ur.role AS role 
+	SELECT u.id, u.email, u.username, ur.role AS role 
 	FROM users u
 	INNER JOIN user_roles ur
 	ON u.role = ur.id
@@ -132,7 +132,7 @@ func (r *UserRepository) FindById(userId int) (*models.User, error) {
 func (r *UserRepository) GetAll() (*[]models.User, error) {
 	u := []models.User{}
 	query := `
-	SELECT u. id, u. email, u.username, ur.role AS role 
+	SELECT u.id, u.email, u.username, ur.role AS role 
 	FROM users u
 	INNER JOIN user_roles ur
 	ON u.role = ur.id`
@@ -230,9 +230,18 @@ func (r *UserRepository) GetTravels(userId int) (*[]models.Travel, error) {
 	}
 
 	travelsQuery := strings.Join(travelsIds, ", ")
-	query := fmt.Sprintf("SELECT * FROM travels WHERE id IN (%s)", travelsQuery)
+	query := fmt.Sprintf(
+		`SELECT t.*, p.name AS place
+		FROM travels t
+		INNER JOIN places p
+		ON t.place = p.id
+		WHERE t.id IN (%s)`, travelsQuery)
 	if err := r.db.Select(&travels, query); err != nil {
 		return nil, err
+	}
+
+	for i := range travels {
+		travels[i].FormatDate()
 	}
 
 	return &travels, nil
