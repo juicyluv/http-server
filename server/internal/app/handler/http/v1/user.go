@@ -14,10 +14,10 @@ import (
 // @Schemes
 // @Description do ping
 // @Tags example
-// @Accept json
+// @Accept none
 // @Produce json
-// @Success 200 {string} Helloworld
-// @Router /example/helloworld [get]
+// @Success 200 {[]models.User} Helloworld
+// @Router /users [get]
 func (h *Handler) getAllUsers(c *gin.Context) {
 	var users *[]models.User
 	users, err := h.service.User.GetAll()
