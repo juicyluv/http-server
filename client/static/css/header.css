@@ -31,7 +31,8 @@ header {
     margin-left: 30px;
 }
 
-.link__ref {
+.link__ref,
+.link__username {
     color: #fff;
     font-size: 24px;
     font-family: 'Roboto', sans-serif;
