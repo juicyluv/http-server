@@ -1,9 +1,6 @@
 {{template "base.html" .}}
 
 {{define "body"}}
-{{if .IsAuth}}
-<h1>Вы вошли как {{.Username}}</h1>
-{{end}}
 
 <h1 class="travels-text">Путешествия</h1>
 
@@ -15,14 +12,13 @@
             <p class="info__title">{{.Title}}</p>
             <p class="info__place">{{.Place}}</p>
             <p class="info__duration">{{.DurationDays}}дн ({{.Date}})</p>
-            <p class="info__complexity">Сложность: {{range $i := intRange .Complexity}}<i class="fas fa-heart"></i>
-                {{end}}</p>
+            <p class="info__complexity">Сложность: {{.Complexity}}/5</p>
             {{if .PartySize}}
-            <p class="info_party-size">Группа: {{.PartySize}} <i class="fas fa-user"></i></p>
+            <p class="info_party-size">Группа: {{.PartySize}}</p>
             {{end}}
             <div class="info__order-price">
                 <p class="order-price__price">{{.Price}} Р</p>
-                <button class="order-price__btn">Заказать</button>
+                <a href="/travel/{{.Id}}" class="order-price__btn">Заказать</a>
             </div>
         </div>
     </div>
