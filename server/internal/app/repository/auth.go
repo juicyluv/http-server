@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/ellywynn/http-server/server/internal/app/models"
 	"github.com/ellywynn/http-server/server/internal/app/models/interfaces"
@@ -23,14 +22,9 @@ func NewAuthRepository(db *sqlx.DB, userRepo *interfaces.UserRepository) *AuthRe
 
 func (ar *AuthRepository) LogIn(input interfaces.AuthLoginStruct) (*models.User, error) {
 	u, err := ar.userRepository.FindByEmailWithPassword(input.Email)
-	if err != nil || !u.ComparePassword(input.Password) {
-		fmt.Println(err.Error())
+	if err != nil || u == nil || !u.ComparePassword(input.Password) {
 		return nil, errors.New("incorrect email or password")
 	}
 
 	return u, nil
-}
-
-func (ar *AuthRepository) LogOut() error {
-	return nil
 }
