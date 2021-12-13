@@ -3,8 +3,8 @@ package service_test
 import (
 	"testing"
 
-	"github.com/ellywynn/http-server/internal/app/models"
-	"github.com/ellywynn/http-server/internal/app/service"
+	"github.com/ellywynn/http-server/server/internal/app/models"
+	"github.com/ellywynn/http-server/server/internal/app/service"
 	"github.com/stretchr/testify/assert"
 )
 
