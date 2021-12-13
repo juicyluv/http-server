@@ -11,9 +11,10 @@
     <title>TRAVELS</title>
     {{end}}
 
+
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/header.css">
-    <script src="https://kit.fontawesome.com/104d2e5ecb.js" crossorigin="anonymous"></script>
+    {{block "style" .}} {{end}}
 </head>
 
 <body>
@@ -29,10 +30,10 @@
                     <a class="link__ref" href="/orders">Мои заказы</a>
                 </li>
                 <li class="menu__link">
-                    <a class="link__ref" href="/sign-out">Выйти</a>
+                    <a onclick="localStorage.clear();" class="link__ref" href="/sign-out">Выйти</a>
                 </li>
                 <li class="menu__link_username">
-                    <a class="link__ref" href="/user/{{.UserId}}">{{.Username}}</a>
+                    <p class="link__username">{{.Username}}</p>
                     <div class="link__user-avatar"></div>
                 </li>
                 {{else}}
