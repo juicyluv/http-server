@@ -3,9 +3,9 @@ package repository_test
 import (
 	"testing"
 
-	"github.com/ellywynn/http-server/internal/app/models"
-	"github.com/ellywynn/http-server/internal/app/models/interfaces"
-	"github.com/ellywynn/http-server/internal/app/repository"
+	"github.com/ellywynn/http-server/server/internal/app/models"
+	"github.com/ellywynn/http-server/server/internal/app/models/interfaces"
+	"github.com/ellywynn/http-server/server/internal/app/repository"
 	"github.com/stretchr/testify/assert"
 )
 
