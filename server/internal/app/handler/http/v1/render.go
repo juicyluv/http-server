@@ -11,18 +11,7 @@ import (
 )
 
 func (h *Handler) renderIndex(c *gin.Context) {
-	// Function to be used in template
-	var funcs = template.FuncMap{
-		"intRange": func(count int) []int {
-			result := make([]int, count)
-			for i := 0; i < count; i++ {
-				result[i] = count
-			}
-			return result
-		},
-	}
-
-	t := template.Must(template.New("").Funcs(funcs).ParseFiles("../client/base.html", "../client/index.html"))
+	t := template.Must(template.ParseFiles("../client/base.html", "../client/index.html"))
 
 	travels, err := h.service.Travel.GetAll()
 	if err != nil {
@@ -122,18 +111,7 @@ func (h *Handler) renderTravel(c *gin.Context) {
 }
 
 func (h *Handler) renderOrders(c *gin.Context) {
-	// Function to be used in template
-	var funcs = template.FuncMap{
-		"intRange": func(count int) []int {
-			result := make([]int, count)
-			for i := 0; i < count; i++ {
-				result[i] = count
-			}
-			return result
-		},
-	}
-
-	t := template.Must(template.New("").Funcs(funcs).ParseFiles("../client/base.html", "../client/orders.html"))
+	t := template.Must(template.ParseFiles("../client/base.html", "../client/orders.html"))
 
 	user, err := getSessionUserStruct(h, c)
 	if err != nil {
