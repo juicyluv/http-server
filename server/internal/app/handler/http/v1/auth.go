@@ -87,14 +87,21 @@ func (h *Handler) signIn(c *gin.Context) {
 	session.Values["user_id"] = user.Id
 	session.Values["email"] = user.Email
 	session.Values["username"] = user.Username
-	session.Values["role"] = user.Role
+	session.Values["role"] = *user.Role
 
 	if err := session.Save(c.Request, c.Writer); err != nil {
 		errorResponse(c, http.StatusInternalServerError, "unable save user session")
 		return
 	}
 
-	c.JSON(http.StatusOK, nil)
+	response := &models.LoginResponse{
+		UserId:   user.Id,
+		Email:    user.Email,
+		Username: user.Username,
+		Role:     *user.Role,
+	}
+
+	c.JSON(http.StatusOK, *response)
 }
 
 func (h *Handler) signOut(c *gin.Context) {
