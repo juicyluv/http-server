@@ -18,7 +18,3 @@ func NewAuthService(repo *interfaces.AuthRepository) interfaces.AuthService {
 func (as *AuthService) LogIn(input interfaces.AuthLoginStruct) (*models.User, error) {
 	return as.repository.LogIn(input)
 }
-
-func (as *AuthService) LogOut() error {
-	return as.repository.LogOut()
-}
