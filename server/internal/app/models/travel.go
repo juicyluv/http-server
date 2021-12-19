@@ -30,7 +30,6 @@ type UpdateTravelInput struct {
 	Description  *string `json:"description"`
 	Date         *string `json:"date"`
 	ImageURL     *string `json:"URL" db:"image_url"`
-	Image        *string `json:"image"`
 }
 
 // Validates creating user struct
@@ -40,7 +39,6 @@ func (t *Travel) Validate() error {
 		validation.Field(&t.Title, validation.Required),
 		validation.Field(&t.DurationDays, validation.Required),
 		validation.Field(&t.Price, validation.Required),
-		validation.Field(&t.PartySize, is.Int),
 		validation.Field(&t.Complexity, validation.Required),
 		validation.Field(&t.Description, is.ASCII, validation.Required),
 		validation.Field(&t.Date, validation.Required),
