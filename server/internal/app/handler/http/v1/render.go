@@ -170,3 +170,49 @@ func (h *Handler) renderSignIn(c *gin.Context) {
 		fmt.Println(err.Error())
 	}
 }
+
+func (h *Handler) renderAdminPanel(c *gin.Context) {
+	places, err := h.service.Place.GetAll()
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	user, err := getSessionUserStruct(h, c)
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	var isAuth bool = false
+	var username, email, role string
+	var userId int
+	if user != nil {
+		isAuth = true
+		username = user.Username
+		email = user.Email
+		role = *user.Role
+		userId = user.Id
+	}
+
+	t := template.Must(template.ParseFiles("../client/base.html", "../client/admin.html"))
+	if err := t.ExecuteTemplate(c.Writer, "admin.html", struct {
+		Places    []models.Place
+		PageTitle string
+		UserId    int
+		Username  string
+		Email     string
+		Role      string
+		IsAuth    bool
+	}{
+		PageTitle: "Панель администратора",
+		Places:    *places,
+		UserId:    userId,
+		Username:  username,
+		Email:     email,
+		Role:      role,
+		IsAuth:    isAuth,
+	}); err != nil {
+		fmt.Println(err.Error())
+	}
+}
