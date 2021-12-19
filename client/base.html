@@ -32,6 +32,11 @@
                 <li class="menu__link">
                     <a onclick="localStorage.clear();" class="link__ref" href="/sign-out">Выйти</a>
                 </li>
+                {{if eq .Role "Admin"}}
+                <li class="menu__link">
+                    <a class="link__ref" href="/admin">Админка</a>
+                </li>
+                {{end}}
                 <li class="menu__link_username">
                     <p class="link__username">{{.Username}}</p>
                     <div class="link__user-avatar"></div>
