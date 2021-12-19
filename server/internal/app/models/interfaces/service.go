@@ -50,5 +50,5 @@ type UserRoleService interface {
 }
 
 type CloudinaryService interface {
-	UploadImage(image, name, folder string) (string, error)
+	UploadImage(filename, path, cldFolder string) (string, error)
 }
