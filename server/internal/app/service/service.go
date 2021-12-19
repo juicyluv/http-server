@@ -11,6 +11,8 @@ type Service struct {
 	Travel   interfaces.TravelService
 	Place    interfaces.PlaceService
 	UserRole interfaces.UserRoleService
+
+	Cld interfaces.CloudinaryService
 }
 
 // Returns new Service instance
@@ -21,5 +23,7 @@ func NewService(repo *repository.Repository) *Service {
 		Travel:   NewTravelService(&repo.Travel),
 		Place:    NewPlaceService(&repo.Place),
 		UserRole: NewUserRoleService(&repo.UserRole),
+
+		Cld: NewCloudinaryService(),
 	}
 }
