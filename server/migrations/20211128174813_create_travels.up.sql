@@ -12,6 +12,7 @@ CREATE TABLE travels(
     complexity INT NOT NULL,
     description TEXT NOT NULL,
     date DATE NOT NULL,
+    image_url VARCHAR(255) NOT NULL DEFAULT '',
     place INT NOT NULL,
 
     FOREIGN KEY(place) REFERENCES places(id) ON DELETE SET NULL

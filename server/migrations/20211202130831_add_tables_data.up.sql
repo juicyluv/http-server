@@ -7,6 +7,7 @@ INSERT INTO travels VALUES (
     5,
     'New desc',
     NOW(),
+    'https://res.cloudinary.com/dydim8luy/image/upload/v1639474810/travels/zxc.jpg',
     1
 );
 
@@ -19,6 +20,7 @@ INSERT INTO travels VALUES (
     4,
     'lorem lorem lorem123123',
     NOW(),
+    'https://res.cloudinary.com/dydim8luy/image/upload/v1639473395/travels/asdfasdfasdf.jpg',
     4
 );
 
@@ -31,6 +33,7 @@ INSERT INTO travels VALUES (
     2,
     'Hello world',
     NOW(),
+    'https://res.cloudinary.com/dydim8luy/image/upload/v1639425725/travels/HELLO.jpg',
     2
 );
 
