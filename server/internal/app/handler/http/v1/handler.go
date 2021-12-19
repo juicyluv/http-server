@@ -147,6 +147,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				authenticate(h.sessionStore),
 				requireRole("Admin", h.sessionStore),
 				h.deleteTravel)
+
+			// Upload travel image
+			travels.POST("/image",
+				authenticate(h.sessionStore),
+				requireRole("Admin", h.sessionStore),
+				h.uploadTravelImage)
 		}
 
 		places := api.Group("/places")
@@ -201,6 +207,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			"orders",
 			authenticate(h.sessionStore),
 			h.renderOrders)
+
+		index.GET("/admin",
+			authenticate(h.sessionStore),
+			requireRole("Admin", h.sessionStore),
+			h.renderAdminPanel,
+		)
 	}
 
 	// Static files
