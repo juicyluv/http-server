@@ -2,6 +2,9 @@ package v1
 
 import (
 	"errors"
+	"fmt"
+	"io"
+	"os"
 
 	"github.com/ellywynn/http-server/server/internal/app/models"
 	"github.com/gin-gonic/gin"
@@ -64,4 +67,24 @@ func getSessionUserStruct(h *Handler, c *gin.Context) (*models.User, error) {
 	}
 
 	return user, nil
+}
+
+func (h *Handler) parseFormFile(c *gin.Context, formName string) (string, error) {
+	file, header, err := c.Request.FormFile(formName)
+	if err != nil {
+		return "", err
+	}
+	filename := header.Filename
+	filepath := fmt.Sprintf("./tmp/%s", filename)
+	out, err := os.Create(filepath)
+	if err != nil {
+		return "", err
+	}
+	defer out.Close()
+	_, err = io.Copy(out, file)
+	if err != nil {
+		return "", err
+	}
+
+	return filepath, nil
 }
