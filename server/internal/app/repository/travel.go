@@ -5,26 +5,23 @@ import (
 	"strings"
 
 	"github.com/ellywynn/http-server/server/internal/app/models"
-	"github.com/ellywynn/http-server/server/internal/app/models/interfaces"
 	"github.com/jmoiron/sqlx"
 )
 
 type TravelRepository struct {
-	db  *sqlx.DB
-	cld interfaces.CloudinaryService
+	db *sqlx.DB
 }
 
-func NewTravelRepository(db *sqlx.DB, cld interfaces.CloudinaryService) *TravelRepository {
+func NewTravelRepository(db *sqlx.DB) *TravelRepository {
 	return &TravelRepository{
-		db:  db,
-		cld: cld,
+		db: db,
 	}
 }
 
 func (tr *TravelRepository) Create(travel *models.Travel) (uint, error) {
 	var travelId uint
 	query := `INSERT INTO travels
-			  VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8)
+			  VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9)
 			  RETURNING id`
 
 	err := tr.db.QueryRow(
@@ -36,6 +33,7 @@ func (tr *TravelRepository) Create(travel *models.Travel) (uint, error) {
 		travel.Complexity,
 		travel.Description,
 		travel.Date,
+		travel.ImageURL,
 		travel.Place,
 	).Scan(&travelId)
 	if err != nil {
@@ -133,12 +131,6 @@ func (tr *TravelRepository) Update(travelId int, travel *models.UpdateTravelInpu
 	if travel.ImageURL != nil {
 		values = append(values, fmt.Sprintf("image_url=$%d", argId))
 		args = append(args, *travel.ImageURL)
-		argId++
-	}
-
-	if travel.Image != nil {
-		values = append(values, fmt.Sprintf("place=$%d", argId))
-		args = append(args, *travel.Place)
 		argId++
 	}
 
