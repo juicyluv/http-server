@@ -3,7 +3,7 @@
 {{define "body"}}
 
 <div class="travel-container" id="travel-{{.Travel.Id}}">
-    <img src="/static/img/travels/travel.png" alt="" class="travel__image_single">
+    <img src="{{.Travel.ImageURL}}" alt="" class="travel__image_single">
     <div class="travel__description">
         <p class="description__title">{{.Travel.Title}}</p>
         <p class="description__place">{{.Travel.Place}}</p>
