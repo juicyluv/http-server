@@ -8,7 +8,7 @@
     {{if .Orders}}
     {{range .Orders}}
     <div class="travels__travel" id="travel-{{.Id}}">
-        <img class="travel__image" src="/static/img/travels/travel.png" alt="">
+        <img class="travel__image" src="{{.ImageURL}}" alt="">
         <div class="travel__info">
             <p class="info__title">{{.Title}}</p>
             <p class="info__place">{{.Place}}</p>
