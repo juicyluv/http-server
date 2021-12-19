@@ -11,6 +11,7 @@ import (
 
 func (h *Handler) createTravel(c *gin.Context) {
 	var input models.Travel
+
 	if err := c.BindJSON(&input); err != nil {
 		errorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -97,4 +98,25 @@ func (h *Handler) deleteTravel(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, nil)
+}
+
+func (h *Handler) uploadTravelImage(c *gin.Context) {
+	filepath, err := h.parseFormFile(c, "travel_image")
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	title := c.Request.FormValue("title")
+	if title == "" {
+		errorResponse(c, http.StatusBadRequest, "title cannot be empty")
+		return
+	}
+
+	url, err := h.service.Cld.UploadImage(title, filepath, "travels")
+	if err != nil {
+		errorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]string{"URL": url})
 }
