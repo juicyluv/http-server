@@ -1,0 +1,50 @@
+{{template "base.html" .}}
+
+{{define "style"}}
+<link rel="stylesheet" href="/static/css/admin.css">
+{{end}}
+
+{{define "body"}}
+
+<div class="form-container">
+    <h2 class="form__text">Создать путешествие</h2>
+    <form enctype="multipart/form-data" class="form" action="/api/v1/travels" method="POST">
+        <input class="form__input" type="text" id="title" name="title" placeholder="Название">
+        <input type="text" id="duration_days" name="duration_days" class="form__input" placeholder="Длительность (дней)"
+            required>
+        <input type="text" name="party_size" id="party_size" class="form__input" placeholder="Размер группы">
+        <input type="text" id="price" name="price" class="form__input" placeholder="Цена" required>
+        <textarea type="text" name="description" id="description" class="form__textarea" placeholder="Описание"
+            required></textarea>
+        <div class="form__select">
+            <p class="select__name">Дата: </p>
+            <input type="date" name="date" id="date" class="form__select_input">
+        </div>
+        <div class="form__select">
+            <p class="select__name">Место: </p>
+            <select name="place" id="place" class="form__select_input">
+                {{range .Places}}
+                <option value="{{.Id}}">{{.Name}}</option>
+                {{end}}
+            </select>
+        </div>
+        <div class="form__select">
+            <p class="select__name">Сложность: </p>
+            <select name="complexity" id="complexity" class="form__select_input">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+        </div>
+        <div class="form__select">
+            <p class="select__name">Картинка: </p>
+            <input type="file" class="form__select_input" name="travel_image" id="image">
+        </div>
+        <button onclick="return sendForm(event)" class="form__btn" type="submit">Создать</button>
+    </form>
+</div>
+
+<script src="/static/js/admin.js"></script>
+{{end}}
