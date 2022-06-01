@@ -23,8 +23,8 @@ func (ts *TravelService) GetById(travelId int) (*models.Travel, error) {
 	return ts.repository.FindById(travelId)
 }
 
-func (ts *TravelService) GetAll() (*[]models.Travel, error) {
-	return ts.repository.FindAll()
+func (ts *TravelService) GetAll(count, page int) (*[]models.Travel, error) {
+	return ts.repository.FindAll(count, page)
 }
 
 func (ts *TravelService) Update(travelId int, travel *models.UpdateTravelInput) error {

@@ -43,11 +43,19 @@ func (tr *TravelRepository) Create(travel *models.Travel) (uint, error) {
 	return travelId, nil
 }
 
-func (tr *TravelRepository) FindAll() (*[]models.Travel, error) {
+func (tr *TravelRepository) FindAll(count, page int) (*[]models.Travel, error) {
 	var travels []models.Travel
-	query := "SELECT t.*, p.name as place FROM travels t INNER JOIN places p ON t.place = p.id"
 
-	if err := tr.db.Select(&travels, query); err != nil {
+	query := `
+		SELECT t.*, p.name as place 
+		FROM travels t 
+		INNER JOIN places p 
+		ON t.place = p.id
+		LIMIT $1
+		OFFSET ($2-1)*$1
+`
+
+	if err := tr.db.Select(&travels, query, count, page); err != nil {
 		return nil, err
 	}
 

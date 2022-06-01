@@ -28,7 +28,7 @@ type AuthLoginStruct struct {
 type TravelService interface {
 	Create(travel *models.Travel) (uint, error)
 	GetById(travelId int) (*models.Travel, error)
-	GetAll() (*[]models.Travel, error)
+	GetAll(count, page int) (*[]models.Travel, error)
 	Update(travelId int, travel *models.UpdateTravelInput) error
 	Delete(travelId int) error
 }

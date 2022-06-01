@@ -9,7 +9,7 @@ database:
   username: "postgres"
   dbname: "travels"
   host: "localhost"
-  port: 5437
+  port: 5432
   sslmode: "disable"
 
 sessions:

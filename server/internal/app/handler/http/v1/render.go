@@ -13,7 +13,7 @@ import (
 func (h *Handler) renderIndex(c *gin.Context) {
 	t := template.Must(template.ParseFiles("../client/base.html", "../client/index.html"))
 
-	travels, err := h.service.Travel.GetAll()
+	travels, err := h.service.Travel.GetAll(10, 1)
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return

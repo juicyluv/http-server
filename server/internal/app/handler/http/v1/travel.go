@@ -33,7 +33,20 @@ func (h *Handler) createTravel(c *gin.Context) {
 
 func (h *Handler) getAllTravels(c *gin.Context) {
 	var travels *[]models.Travel
-	travels, err := h.service.Travel.GetAll()
+
+	q := c.Request.URL.Query()
+	count, _ := strconv.Atoi(q.Get("count"))
+	page, _ := strconv.Atoi(q.Get("page"))
+
+	if count == 0 {
+		count = 10
+	}
+
+	if page == 0 {
+		page = 1
+	}
+
+	travels, err := h.service.Travel.GetAll(count, page)
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return
