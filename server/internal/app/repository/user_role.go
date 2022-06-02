@@ -21,7 +21,7 @@ func NewUserRoleRepository(db *sqlx.DB) interfaces.UserRoleRepository {
 
 func (ur *UserRoleRepository) Create(role *models.UserRole) (uint, error) {
 	var roleId uint
-	query := "INSER INTO user_role (role) VALUES ($1) RETURNING id"
+	query := "INSERT INTO user_roles (role) VALUES ($1) RETURNING id"
 	if err := ur.db.QueryRow(query, role.Role).Scan(&roleId); err != nil {
 		return 0, err
 	}
