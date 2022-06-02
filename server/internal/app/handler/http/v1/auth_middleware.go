@@ -20,13 +20,16 @@ func authenticate(sessionStore sessions.Store) gin.HandlerFunc {
 }
 
 // Require role
-func requireRole(role string, sessionStore sessions.Store) gin.HandlerFunc {
+func requireRole(roles []string, sessionStore sessions.Store) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session, _ := sessionStore.Get(c.Request, coockieName)
-		if session.Values["role"] != role {
-			errorResponse(c, http.StatusForbidden, "you have no access to this resource")
-			c.Abort()
+		for _, role := range roles {
+			if session.Values["role"] == role {
+				return
+			}
 		}
+		errorResponse(c, http.StatusForbidden, "you have no access to this resource")
+		c.Abort()
 	}
 }
 

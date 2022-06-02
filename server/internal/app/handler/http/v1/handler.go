@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"github.com/ellywynn/http-server/server/internal/app/models"
 	"os"
 
 	_ "github.com/ellywynn/http-server/server/docs"
@@ -76,13 +77,19 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			users.PUT(
 				"/:id",
 				authenticate(h.sessionStore),
-				requireRole("Admin", h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole, models.ModeratorDBRole},
+					h.sessionStore,
+				),
 				h.updateUser)
 
 			users.DELETE(
 				"/:id",
 				authenticate(h.sessionStore),
-				requireRole("Admin", h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole},
+					h.sessionStore,
+				),
 				h.deleteUser,
 			)
 
@@ -91,6 +98,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				travels.POST(
 					"/:id",
 					authenticate(h.sessionStore),
+					requireRole(
+						[]string{models.AdminDBRole, models.AdminDBRole},
+						h.sessionStore,
+					),
 					h.addUserTravel)
 
 				travels.GET("", h.getUserTravels)
@@ -108,18 +119,27 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				roles.POST(
 					"",
 					authenticate(h.sessionStore),
-					requireRole("Admin", h.sessionStore),
+					requireRole(
+						[]string{models.AdminDBRole},
+						h.sessionStore,
+					),
 					h.createUserRole)
 				roles.GET("/:id", h.getUserRoleById)
 
 				roles.PUT("/:id",
 					authenticate(h.sessionStore),
-					requireRole("Admin", h.sessionStore),
+					requireRole(
+						[]string{models.AdminDBRole},
+						h.sessionStore,
+					),
 					h.updateUserRole)
 
 				roles.DELETE("/:id",
 					authenticate(h.sessionStore),
-					requireRole("Admin", h.sessionStore),
+					requireRole(
+						[]string{models.AdminDBRole},
+						h.sessionStore,
+					),
 					h.deleteUserRole)
 			}
 		}
@@ -130,8 +150,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			travels.POST(
 				"",
 				authenticate(h.sessionStore),
-				requireRole("Admin",
-					h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole},
+					h.sessionStore,
+				),
 				h.createTravel)
 
 			travels.GET("/:id", h.getTravelById)
@@ -139,19 +161,28 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			travels.PUT(
 				"/:id",
 				authenticate(h.sessionStore),
-				requireRole("Admin", h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole},
+					h.sessionStore,
+				),
 				h.updateTravel)
 
 			travels.DELETE(
 				"/:id",
 				authenticate(h.sessionStore),
-				requireRole("Admin", h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole},
+					h.sessionStore,
+				),
 				h.deleteTravel)
 
 			// Upload travel image
 			travels.POST("/image",
 				authenticate(h.sessionStore),
-				requireRole("Admin", h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole},
+					h.sessionStore,
+				),
 				h.uploadTravelImage)
 		}
 
@@ -162,8 +193,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			places.POST(
 				"",
 				authenticate(h.sessionStore),
-				requireRole("Admin",
-					h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole},
+					h.sessionStore,
+				),
 				h.createPlace)
 
 			places.GET("/:id", h.getPlaceById)
@@ -171,15 +204,19 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			places.PUT(
 				"/:id",
 				authenticate(h.sessionStore),
-				requireRole("Admin",
-					h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole},
+					h.sessionStore,
+				),
 				h.updatePlace)
 
 			places.DELETE(
 				"/:id",
 				authenticate(h.sessionStore),
-				requireRole("Admin",
-					h.sessionStore),
+				requireRole(
+					[]string{models.AdminDBRole},
+					h.sessionStore,
+				),
 				h.deletePlace)
 		}
 	}
@@ -210,7 +247,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 		index.GET("/admin",
 			authenticate(h.sessionStore),
-			requireRole("Admin", h.sessionStore),
+			requireRole(
+				[]string{models.AdminDBRole},
+				h.sessionStore,
+			),
 			h.renderAdminPanel,
 		)
 	}

@@ -5,6 +5,12 @@ import (
 	"github.com/go-ozzo/ozzo-validation/is"
 )
 
+const (
+	AdminDBRole     = "Admin"
+	ModeratorDBRole = "Moderator"
+	UserDBRole      = "User"
+)
+
 type UserRole struct {
 	Id   uint   `json:"id"`
 	Role string `json:"role"`
