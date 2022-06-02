@@ -1,7 +1,7 @@
 server:
   port: 3000
   log_level: "debug"
-  writeTimeout: 10 # Sedonds
+  writeTimeout: 10 # Seconds
   readTimeout: 10 # Seconds
   maxHeaderBytes: 1 # MB
 
