@@ -43,24 +43,61 @@ func (tr *TravelRepository) Create(travel *models.Travel) (uint, error) {
 	return travelId, nil
 }
 
-func (tr *TravelRepository) FindAll(count, page int) (*[]models.Travel, error) {
-	var travels []models.Travel
+func (tr *TravelRepository) FindAll(count, page, sortOrder int, sortField string) (*[]models.Travel, error) {
+	var sorder string
+	if sortOrder == 0 {
+		sorder = "DESC"
+	} else {
+		sorder = "ASC"
+	}
 
-	query := `
+	query := fmt.Sprintf(`
 		SELECT t.*, p.name as place 
 		FROM travels t 
 		INNER JOIN places p 
 		ON t.place = p.id
+		ORDER BY %s %s
 		LIMIT $1
 		OFFSET ($2-1)*$1
-`
+	`, sortField, sorder)
 
-	if err := tr.db.Select(&travels, query, count, page); err != nil {
+	rows, err := tr.db.Query(query, count, page)
+
+	if err != nil {
 		return nil, err
 	}
 
-	for i := range travels {
-		travels[i].FormatDate()
+	defer rows.Close()
+
+	var travels []models.Travel
+
+	for rows.Next() {
+		var (
+			travel models.Travel
+			place  string
+		)
+
+		err = rows.Scan(
+			&travel.Id,
+			&travel.Title,
+			&travel.DurationDays,
+			&travel.Price,
+			&travel.PartySize,
+			&travel.Complexity,
+			&travel.Description,
+			&travel.Date,
+			&travel.ImageURL,
+			&travel.Place,
+			&place,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		travel.Place = place
+		travel.FormatDate()
+		travels = append(travels, travel)
 	}
 
 	return &travels, nil

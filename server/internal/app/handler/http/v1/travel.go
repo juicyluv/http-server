@@ -37,6 +37,8 @@ func (h *Handler) getAllTravels(c *gin.Context) {
 	q := c.Request.URL.Query()
 	count, _ := strconv.Atoi(q.Get("count"))
 	page, _ := strconv.Atoi(q.Get("page"))
+	sortOrder, _ := strconv.Atoi(q.Get("sort_order"))
+	sortField := q.Get("sort_field")
 
 	if count == 0 {
 		count = 10
@@ -46,7 +48,23 @@ func (h *Handler) getAllTravels(c *gin.Context) {
 		page = 1
 	}
 
-	travels, err := h.service.Travel.GetAll(count, page)
+	if sortOrder != 0 {
+		sortOrder = 1
+	}
+
+	var validSortField bool
+	for _, v := range []string{"title", "date", "price"} {
+		if v == sortField {
+			validSortField = true
+			break
+		}
+	}
+
+	if !validSortField {
+		sortField = "title"
+	}
+
+	travels, err := h.service.Travel.GetAll(count, page, sortOrder, sortField)
 	if err != nil {
 		errorResponse(c, http.StatusInternalServerError, err.Error())
 		return

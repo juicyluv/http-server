@@ -39,7 +39,7 @@ func TestTravelRepository_FindAll(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEqual(t, 0, travelId2)
 
-	travels, err := r.Travel.FindAll(100, 1)
+	travels, err := r.Travel.FindAll(100, 1, 0, "title")
 
 	var wantedType *[]models.Travel
 
