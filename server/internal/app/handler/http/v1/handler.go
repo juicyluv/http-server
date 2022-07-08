@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"github.com/ellywynn/http-server/server/internal/app/models"
 	"os"
 
 	_ "github.com/ellywynn/http-server/server/docs"
@@ -9,8 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 	"github.com/spf13/viper"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 const (
@@ -48,7 +45,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		auth.POST(
 			"/sign-in",
-			alreadyAuthenticated(h.sessionStore),
 			h.signIn)
 
 		auth.POST("/sign-up", h.signUp)
@@ -62,7 +58,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			users.GET(
 				"",
-				authenticate(h.sessionStore),
+
 				h.getAllUsers)
 
 			users.POST("", h.signUp)
@@ -71,25 +67,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 			users.POST(
 				"/:user_id/travels/:travel_id",
-				authenticate(h.sessionStore),
 				h.addUserTravelByUserId)
 
 			users.PUT(
 				"/:id",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole, models.ModeratorDBRole},
-					h.sessionStore,
-				),
 				h.updateUser)
 
 			users.DELETE(
 				"/:id",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole},
-					h.sessionStore,
-				),
 				h.deleteUser,
 			)
 
@@ -97,18 +82,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			{
 				travels.POST(
 					"/:id",
-					authenticate(h.sessionStore),
-					requireRole(
-						[]string{models.AdminDBRole, models.AdminDBRole},
-						h.sessionStore,
-					),
 					h.addUserTravel)
 
 				travels.GET("", h.getUserTravels)
 
 				travels.DELETE(
 					"/:id",
-					authenticate(h.sessionStore),
 					h.removeUserTravel)
 			}
 
@@ -118,28 +97,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 				roles.POST(
 					"",
-					authenticate(h.sessionStore),
-					requireRole(
-						[]string{models.AdminDBRole},
-						h.sessionStore,
-					),
 					h.createUserRole)
 				roles.GET("/:id", h.getUserRoleById)
 
 				roles.PUT("/:id",
-					authenticate(h.sessionStore),
-					requireRole(
-						[]string{models.AdminDBRole},
-						h.sessionStore,
-					),
 					h.updateUserRole)
 
 				roles.DELETE("/:id",
-					authenticate(h.sessionStore),
-					requireRole(
-						[]string{models.AdminDBRole},
-						h.sessionStore,
-					),
 					h.deleteUserRole)
 			}
 		}
@@ -149,40 +113,20 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			travels.GET("", h.getAllTravels)
 			travels.POST(
 				"",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole},
-					h.sessionStore,
-				),
 				h.createTravel)
 
 			travels.GET("/:id", h.getTravelById)
 
 			travels.PUT(
 				"/:id",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole},
-					h.sessionStore,
-				),
 				h.updateTravel)
 
 			travels.DELETE(
 				"/:id",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole},
-					h.sessionStore,
-				),
 				h.deleteTravel)
 
 			// Upload travel image
 			travels.POST("/image",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole},
-					h.sessionStore,
-				),
 				h.uploadTravelImage)
 		}
 
@@ -192,71 +136,19 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 			places.POST(
 				"",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole},
-					h.sessionStore,
-				),
 				h.createPlace)
 
 			places.GET("/:id", h.getPlaceById)
 
 			places.PUT(
 				"/:id",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole},
-					h.sessionStore,
-				),
 				h.updatePlace)
 
 			places.DELETE(
 				"/:id",
-				authenticate(h.sessionStore),
-				requireRole(
-					[]string{models.AdminDBRole},
-					h.sessionStore,
-				),
 				h.deletePlace)
 		}
 	}
-
-	// Swagger documentation page
-	router.GET("/api/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-
-	index := router.Group("/")
-	{
-		index.GET("", h.renderIndex)
-		index.GET(
-			"sign-in",
-			alreadyAuthenticated(h.sessionStore),
-			h.renderSignIn)
-
-		index.GET(
-			"sign-up",
-			alreadyAuthenticated(h.sessionStore),
-			h.renderSignUp)
-
-		index.GET("sign-out", h.signOut)
-		index.GET("travel/:id", h.renderTravel)
-
-		index.GET(
-			"orders",
-			authenticate(h.sessionStore),
-			h.renderOrders)
-
-		index.GET("/admin",
-			authenticate(h.sessionStore),
-			requireRole(
-				[]string{models.AdminDBRole},
-				h.sessionStore,
-			),
-			h.renderAdminPanel,
-		)
-	}
-
-	// Static files
-	router.Static("/static", "../client/static")
 
 	return router
 }

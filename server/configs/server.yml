@@ -6,10 +6,10 @@ server:
   maxHeaderBytes: 1 # MB
 
 database:
-  username: "postgres"
-  dbname: "travels"
-  host: "localhost"
-  port: 5432
+  username: "authenticate(h.sessionStore),"
+  dbname: "std_1407_frontend"
+  host: "std-mysql"
+  port: 3306
   sslmode: "disable"
 
 sessions:

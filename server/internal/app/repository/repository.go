@@ -29,7 +29,7 @@ func NewRepository(config *Config) *Repository {
 
 // Connects to the database
 func (r *Repository) Open() error {
-	db, err := sqlx.Open("postgres", r.config.DbURL)
+	db, err := sqlx.Open("mysql", r.config.DbURL)
 	if err != nil {
 		return err
 	}
